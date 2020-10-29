@@ -3,8 +3,330 @@
 <head>
     <meta charset="UTF-8">
     <title>保存</title>
+    <!-- 先引入 Vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- 引入axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 </head>
 <body>
+    <div id="app">
+        <el-form   ref="form" :model="form" label-width="80px">
+            <el-row :gutter="20">
+                <el-col :span="8">
+                        <el-form-item label="级别">
+                            <el-input v-model="form.name"></el-input>
+                        </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="新旧">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="类别">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
 
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <el-form-item label="目录">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="姓名">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="手机">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="24">
+                    <el-form-item label="公司">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <el-form-item label="产品">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="业务员">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="微信昵称">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <el-form-item label="存在手机">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="地址">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="更多电话">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <el-form-item label="曾用物流">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="信用评估">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="邮箱">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+
+
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <el-form-item label="主页">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="省份">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="城市">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <el-form-item label="县市">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="分组">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="备用1">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <el-form-item label="备用2">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="备用3">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="备用4">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+
+            </el-row>
+
+
+            <el-row :gutter="20">
+                <el-col :span="24">
+                    <el-form-item label="街道">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="快手">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="快手内容">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="抖音">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="抖音内容">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="拼多多">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="拼多多内容">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="QQ">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="QQ内容">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="淘宝旺旺">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="淘宝旺旺内容">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="百度">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="百度内容">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="24">
+                    <el-form-item label="电话内容">
+                        <el-input type="textarea" v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="24">
+                    <el-form-item label="沟通记录">
+                        <el-input type="textarea" v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="24">
+                    <el-form-item label="销售记录">
+                        <el-input type="textarea" v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="备注">
+                        <el-input type="textarea" v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
+    </div>
+<style>
+    .el-row {
+        margin-bottom: 20px;
+    }
+    .el-col {
+        border-radius: 4px;
+    }
+    .bg-purple-dark {
+        background: #99a9bf;
+    }
+    .bg-purple {
+        background: #d3dce6;
+    }
+    .bg-purple-light {
+        background: #e5e9f2;
+    }
+    .grid-content {
+        border-radius: 4px;
+        min-height: 36px;
+    }
+    .row-bg {
+        padding: 10px 0;
+        background-color: #f9fafc;
+    }
+</style>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: function() {
+                return {
+                     form:{
+                         name:''
+                     }
+                }
+            }
+        })
+    </script>
 </body>
 </html>

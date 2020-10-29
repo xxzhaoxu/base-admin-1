@@ -1,10 +1,1645 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>查询</title>
+    <!-- 先引入 Vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- 引入axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 </head>
 <body>
-$END$
+<div id="app">
+    <el-scrollbar   style="height:160px;">
+        <el-form     label-width="80px">
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <el-form-item label="级别">
+                        <el-input v-model="level"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="新旧">
+                        <el-input v-model="isNew"></el-input>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="6">
+                    <el-form-item label="类别">
+                        <el-input v-model="cType"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="目录">
+                        <el-input v-model="menu"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <el-form-item label="公司">
+                        <el-input v-model="company"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="姓名">
+                        <el-input v-model="cName"></el-input>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="6">
+                    <el-form-item label="手机">
+                        <el-input v-model="phone"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="产品">
+                        <el-input v-model="product"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+
+
+
+
+
+            <div class="more">
+                <el-button type="primary" @click="findTableData">查询</el-button>
+                <el-button type="primary" class="uploadbt" @click="dialoguploadVisible = true">上传文件</el-button>
+                <el-button type="primary" @click="dialogFormVisible = true">更多条件</el-button>
+            </div>
+        </el-form>
+
+    </el-scrollbar>
+
+
+    <!--查询条件-->
+    <el-dialog title="筛选条件"
+               :visible.sync="dialogFormVisible"
+               :close-on-press-escape='false'
+               :before-close="cancel"
+    >
+        <el-scrollbar style="height: 300px;">
+            <el-form>
+                <el-form-item label="业务员" v-if="salesmanShow" :label-width="formLabelWidth">
+                    <el-input v-model="salesman" autocomplete="off">
+                        <el-button slot="append" v-on:click="batchOperate('salesman')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="微信昵称" v-if="wxNickShow" :label-width="formLabelWidth">
+                    <el-input v-model="wxNick" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('wx_nick')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="存在手机" v-if="wxPhoneShow" :label-width="formLabelWidth">
+                    <el-input v-model="wxPhone" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('wx_phone')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="地址" v-if="addressShow" :label-width="formLabelWidth">
+                    <el-input v-model="address" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('address')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="更多电话" v-if="phone2Show" :label-width="formLabelWidth">
+                    <el-input v-model="phone2" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('phone2')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="销售记录" v-if="salesListShow" :label-width="formLabelWidth">
+                    <el-input v-model="salesList" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('sales_list')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="信用评估" v-if="promiseShow" :label-width="formLabelWidth">
+                    <el-input v-model="promise" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('promise')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="电话内容" v-if="phoneContentShow" :label-width="formLabelWidth">
+                    <el-input v-model="phoneContent" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('phone_content')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="快手" v-if="ksShow" :label-width="formLabelWidth">
+                    <el-input v-model="ks" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('ks')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="快手内容" v-if="ksContentShow" :label-width="formLabelWidth">
+                    <el-input v-model="ksContent" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('ks_content')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="抖音" v-if="dyShow" :label-width="formLabelWidth">
+                    <el-input v-model="dy" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('dy')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="抖音内容" v-if="dyContentShow" :label-width="formLabelWidth">
+                    <el-input v-model="dyContent" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('dy_content')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="拼多多" v-if="pddShow" :label-width="formLabelWidth">
+                    <el-input v-model="pdd" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('pdd')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="拼多多内容" v-if="pddContentShow" :label-width="formLabelWidth">
+                    <el-input v-model="pddContent" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('pdd_content')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="QQ" v-if="qqShow" :label-width="formLabelWidth">
+                    <el-input v-model="qq" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('qq')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="QQ内容" v-if="qqContentShow" :label-width="formLabelWidth">
+                    <el-input v-model="qqContent" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('qq_content')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="淘宝旺旺" v-if="tbwwShow" :label-width="formLabelWidth">
+                    <el-input v-model="tbww" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('tbww')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="淘宝旺旺内容" v-if="tbwwContentShow" :label-width="formLabelWidth">
+                    <el-input v-model="tbwwContent" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('tbww_content')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="邮箱" v-if="emailShow" :label-width="formLabelWidth">
+                    <el-input v-model="email" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('email')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="百度" v-if="baiduShow" :label-width="formLabelWidth">
+                    <el-input v-model="baidu" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('baidu')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+
+                <el-form-item label="百度内容" v-if="baiduContentShow" :label-width="formLabelWidth">
+                    <el-input v-model="baiduContent" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('baidu_content')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="主页" v-if="indexPageShow" :label-width="formLabelWidth">
+                    <el-input v-model="indexPage" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('index_page')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+
+                <el-form-item label="备注" v-if="remarkShow" :label-width="formLabelWidth">
+                    <el-input v-model="remark" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('remark')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="沟通记录" v-if="connectListShow" :label-width="formLabelWidth">
+                    <el-input v-model="connectList" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('connect_list')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="省份" v-if="provinceShow" :label-width="formLabelWidth">
+                    <el-input v-model="province" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('province')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="地市" v-if="cityShow" :label-width="formLabelWidth">
+                    <el-input v-model="city" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('city')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="县市" v-if="areaShow"  :label-width="formLabelWidth">
+                    <el-input v-model="area" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('area')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="街道" v-if="countryShow"  :label-width="formLabelWidth">
+                    <el-input v-model="country" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('country')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="曾用物流" v-if="logistialAddressShow" :label-width="formLabelWidth">
+                    <el-input v-model="logistialAddress" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('logistial_address')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="分组" v-if="cGroupShow" :label-width="formLabelWidth">
+                    <el-input v-model="cGroup" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('c_group')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="备用一" v-if="textShow1" :label-width="formLabelWidth">
+                    <el-input v-model="text1" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('text_1')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="备用二" v-if="textShow2" :label-width="formLabelWidth">
+                    <el-input v-model="text2" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('text_2')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="备用三" v-if="textShow3" :label-width="formLabelWidth">
+                    <el-input v-model="text3" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('text_3')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="备用四" v-if="textShow4" :label-width="formLabelWidth">
+                    <el-input v-model="text4" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('text_4')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="备用五" v-if="textShow5" :label-width="formLabelWidth">
+                    <el-input v-model="text5" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('text_5')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="备用六" v-if="textShow6" :label-width="formLabelWidth">
+                    <el-input v-model="text6" autocomplete="off">
+                        <el-button slot="append"  v-on:click="batchOperate('text_6')" icon="el-icon-delete"></el-button>
+                    </el-input>
+                </el-form-item>
+
+            </el-form>
+        </el-scrollbar>
+        <div slot="footer" class="dialog-footer">
+
+            <el-button @click="cancel">取 消</el-button>
+            <el-button type="primary" @click="qued">确 定</el-button>
+
+            <el-dropdown
+                    placement="bottom"
+                    trigger="click"
+                    @command="batchOperate"
+            >
+                <el-button type="primary" class="search-btn">
+                    更多条件
+                    <i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-scrollbar style="height: 200px;">
+                        <el-dropdown-item command="salesman">业务员</el-dropdown-item>
+                        <el-dropdown-item command="wx_nick">微信昵称</el-dropdown-item>
+                        <el-dropdown-item command="wx_phone">存在手机</el-dropdown-item>
+                        <el-dropdown-item command="address">地址</el-dropdown-item>
+                        <el-dropdown-item command="phone2">更多电话</el-dropdown-item>
+                        <el-dropdown-item command="sales_list">销售记录</el-dropdown-item>
+                        <el-dropdown-item command="promise">信用评估</el-dropdown-item>
+                        <el-dropdown-item command="phone_content">电话内容</el-dropdown-item>
+                        <el-dropdown-item command="ks">快手</el-dropdown-item>
+                        <el-dropdown-item command="ks_content">快手内容</el-dropdown-item>
+                        <el-dropdown-item command="dy">抖音</el-dropdown-item>
+                        <el-dropdown-item command="dy_content">抖音内容</el-dropdown-item>
+                        <el-dropdown-item command="pdd">拼多多</el-dropdown-item>
+                        <el-dropdown-item command="pdd_content">拼多多内容</el-dropdown-item>
+                        <el-dropdown-item command="qq">QQ</el-dropdown-item>
+                        <el-dropdown-item command="qq_content">QQ内容</el-dropdown-item>
+                        <el-dropdown-item command="tbww">淘宝旺旺</el-dropdown-item>
+                        <el-dropdown-item command="tbww_content">旺旺内容</el-dropdown-item>
+                        <el-dropdown-item command="email">邮箱</el-dropdown-item>
+                        <el-dropdown-item command="baidu">百度</el-dropdown-item>
+                        <el-dropdown-item command="baidu_content">百度内容</el-dropdown-item>
+                        <el-dropdown-item command="index_page">主页</el-dropdown-item>
+                        <el-dropdown-item command="remark">备注</el-dropdown-item>
+                        <el-dropdown-item command="connect_list">沟通记录</el-dropdown-item>
+                        <el-dropdown-item command="province">省份</el-dropdown-item>
+                        <el-dropdown-item command="city">地市</el-dropdown-item>
+                        <el-dropdown-item command="area">县市</el-dropdown-item>
+                        <el-dropdown-item command="country">街道</el-dropdown-item>
+                        <el-dropdown-item command="logistial_address">曾用物流</el-dropdown-item>
+                        <el-dropdown-item command="c_group">分组</el-dropdown-item>
+                        <el-dropdown-item command="text_1">备用1</el-dropdown-item>
+                        <el-dropdown-item command="text_2">备用2</el-dropdown-item>
+                        <el-dropdown-item command="text_3">备用3</el-dropdown-item>
+                        <el-dropdown-item command="text_4">备用4</el-dropdown-item>
+                        <el-dropdown-item command="text_5">备用5</el-dropdown-item>
+                        <el-dropdown-item command="text_6">备用6</el-dropdown-item>
+                    </el-scrollbar>
+                </el-dropdown-menu>
+            </el-dropdown>
+
+
+
+        </div>
+    </el-dialog>
+    <!--查询条件结束-->
+
+    <el-dialog
+            title="上传文件"
+            :visible.sync="dialoguploadVisible"
+            :close-on-press-escape='false'
+            :before-close="cancel"
+    >
+        <el-form style="text-align: center;">
+            <el-switch
+                    style="display: block"
+                    v-model="share"
+                    active-color="#13ce66"
+                    inactive-color="#2897ff"
+                    active-text="不公开"
+                    inactive-text="公开">
+            </el-switch>
+            <span class="demonstration">状态</span>
+            <el-switch
+                    style="display: block"
+                    v-model="uploadTag"
+                    active-color="#13ce66"
+                    inactive-color="#2897ff"
+                    active-text="覆盖"
+                    inactive-text="追加">
+
+            </el-switch>
+
+            <el-upload
+                    class="upload-demo"
+                    ref="upload"
+                    action="http://222.174.180.94:8888/upload"
+                    :data="{tag:`${uploadTag}`,share:`${share}`}"
+                    name="multipartFile"
+                    :on-preview="handlePreview"
+                    :on-remove="handleRemove"
+                    :file-list="fileList"
+                    :auto-upload="false">
+                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
+            </el-upload>
+
+
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialoguploadVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialoguploadVisible = false">确 定</el-button>
+        </div>
+    </el-dialog>
+    <!--文件上传模态框-->
+
+    <!-- 修改模态框开始 -->
+<!--    <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>-->
+
+    <el-dialog title="修改"
+               :visible.sync="updateModal"
+               width="100%"
+    >
+            <el-form   ref="form"   label-width="80px">
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="级别">
+                            <el-input v-model="updateObj.level"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="新旧">
+                            <el-input v-model="updateObj.isNew"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="类别">
+                            <el-input v-model="updateObj.ctype"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="目录">
+                            <el-input v-model="updateObj.menu"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="姓名">
+                            <el-input v-model="updateObj.cname"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="手机">
+                            <el-input v-model="updateObj.phone"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <el-form-item label="公司">
+                            <el-input v-model="updateObj.company"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="产品">
+                            <el-input v-model="updateObj.product"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="业务员">
+                            <el-input v-model="updateObj.salesman"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="微信昵称">
+                            <el-input v-model="updateObj.wxNick"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="存在手机">
+                            <el-input v-model="updateObj.wxPhone"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="地址">
+                            <el-input v-model="updateObj.address"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="更多电话">
+                            <el-input v-model="updateObj.phone2"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="曾用物流">
+                            <el-input v-model="updateObj.logistialAddress"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="信用评估">
+                            <el-input v-model="updateObj.promise"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="邮箱">
+                            <el-input v-model="updateObj.email"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+
+
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="主页">
+                            <el-input v-model="updateObj.indexPage"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="省份">
+                            <el-input v-model="updateObj.province"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="城市">
+                            <el-input v-model="updateObj.city"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="县市">
+                            <el-input v-model="updateObj.area"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="分组">
+                            <el-input v-model="updateObj.group"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="备用1">
+                            <el-input v-model="updateObj.text1"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="备用2">
+                            <el-input v-model="updateObj.text2"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="备用3">
+                            <el-input v-model="updateObj.text3"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="备用4">
+                            <el-input v-model="updateObj.text4"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+
+
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <el-form-item label="街道">
+                            <el-input v-model="updateObj.country"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="快手">
+                            <el-input v-model="updateObj.ks"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="快手内容">
+                            <el-input v-model="updateObj.ksContent"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="抖音">
+                            <el-input v-model="updateObj.dy"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="抖音内容">
+                            <el-input v-model="updateObj.dyContent"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="拼多多">
+                            <el-input v-model="updateObj.pdd"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="拼多多内容">
+                            <el-input v-model="updateObj.pddContent"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="QQ">
+                            <el-input v-model="updateObj.qq"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="QQ内容">
+                            <el-input v-model="updateObj.qqContent"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="淘宝旺旺">
+                            <el-input v-model="updateObj.tbww"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="淘宝旺旺内容">
+                            <el-input v-model="updateObj.tbwwContent"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="百度">
+                            <el-input v-model="updateObj.baidu"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="百度内容">
+                            <el-input v-model="updateObj.baiduContent"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <el-form-item label="电话内容">
+                            <el-input type="textarea" v-model="updateObj.phoneContent"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <el-form-item label="沟通记录">
+                            <el-input type="textarea" v-model="updateObj.connectList"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <el-form-item label="销售记录">
+                            <el-input type="textarea" v-model="updateObj.salesList"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="备注">
+                            <el-input type="textarea" v-model="updateObj.remark"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col>
+                        <div class="demo-image__lazy">
+                            <el-image v-for="url in urls" :key="url" :src="url" lazy></el-image>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-form>
+
+
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="updateModal = false">取 消</el-button>
+            <el-button type="primary" @click="saveUpdate">修 改</el-button>
+        </div>
+    </el-dialog>
+    <!--修改 模态框 结束-->
+    <el-table
+            :data="tableData"
+            stripe
+            border
+            :max-height="h"
+            style="width: 100%">
+        <el-table-column
+                prop="level"
+                label="级别"
+                width="80">
+        </el-table-column>
+        <el-table-column
+                prop="isNew"
+                label="新旧"
+                width="80">
+        </el-table-column>
+        <el-table-column
+                prop="ctype"
+                label="类型"
+                width="80"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="address"
+                label="地址"
+                :show-overflow-tooltip="true"
+                width="180"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="menu"
+                label="目录"
+                :show-overflow-tooltip="true"
+                width="80"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="company"
+                label="公司"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="phone"
+                label="手机"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+
+        <el-table-column
+                prop="product"
+                label="产品"
+                :show-overflow-tooltip="true"
+                width="180"
+        >
+        </el-table-column>
+
+
+        <el-table-column
+                prop="salesman"
+                :show-overflow-tooltip="true"
+                label="业务员"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="wxNick"
+                label="微信昵称"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="wxPhone"
+                label="存在手机"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+
+
+        <el-table-column
+                prop="address"
+                label="地址"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="wxNick"
+                label="微信"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="wxPhone"
+                label="存在手机"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="phone2"
+                label="更多电话"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="salesList"
+                label="销售记录"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="promise"
+                label="信用评估"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+
+        <el-table-column
+                prop="phoneContent"
+                label="电话内容"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="ks"
+                label="快手"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="ksCoucent"
+                label="快手内容"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="dy"
+                label="抖音"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="dyCouncent"
+                label="抖音内容"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="pdd"
+                label="拼多多"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="pddContent"
+                label="拼多多内容"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="qq"
+                label="QQ"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="qqContent"
+                label="QQ内容"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="tbww"
+                label="淘宝旺旺"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="tbwwContent"
+                label="淘宝旺旺内容"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="baidu"
+                label="百度"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="baiduContent"
+                label="百度内容"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="indexPage"
+                label="主页"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="remark"
+                label="备注"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="connectList"
+                label="沟通记录"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="group"
+                label="所有人"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="province"
+                label="省份"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="city"
+                label="地市"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="area"
+                label="县"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="area"
+                label="县"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="agency"
+                label="街道"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                prop="logistialAddress"
+                label="曾用物流"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+         <el-table-column
+                prop="text1"
+                label="备用一"
+                :show-overflow-tooltip="true"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
+                        prop="text2"
+                        label="备用二"
+                        :show-overflow-tooltip="true"
+                        width="100"
+                >
+        </el-table-column>
+        <el-table-column
+                        prop="text3"
+                        label="备用三"
+                        :show-overflow-tooltip="true"
+                        width="100"
+                >
+        </el-table-column>
+        <el-table-column
+                        prop="text4"
+                        label="备用四"
+                        :show-overflow-tooltip="true"
+                        width="100"
+                >
+        </el-table-column>
+        <el-table-column
+                        prop="text5"
+                        label="备用五"
+                        :show-overflow-tooltip="true"
+                        width="100"
+                >
+        </el-table-column>
+        <el-table-column
+                        prop="text6"
+                        label="备用六"
+                        :show-overflow-tooltip="true"
+                        width="100"
+                >
+        </el-table-column>
+        <el-table-column
+                fixed="right"
+                label="操作"
+                width="100">
+            <template slot-scope="scope">
+                <el-button @click="handleClick(scope.row)" type="text" size="small">查询详细</el-button>
+
+            </template>
+        </el-table-column>
+    </el-table>
+    <div class="block">
+        <el-pagination
+                layout="prev, pager, next"
+                @prev-click="prevClick"
+                @next-click="nextClick"
+                :total="total"
+                @current-change="currentChange"
+                >
+        </el-pagination>
+    </div>
+</div>
+<style>
+    /*.upload-demo{*/
+    /*    display: flex;*/
+    /*    flex-direction:column;*/
+    /*}*/
+    .el-scrollbar__view {
+        overflow-x: hidden;
+    }
+    .el-form-item{
+        margin-bottom: 4px;
+    }
+    .more{
+        text-align: right;
+    }
+    .uploadbt{
+        position: absolute;
+        left: 10px;
+    }
+    .cell{
+        text-align: center;
+    }
+</style>
+<script>
+    var local = window.location.host;
+
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                pageIndex:1,
+                pageSize:10,
+                total:0,
+                tableData: [],
+                dialogFormVisible: false,
+                dialoguploadVisible:false,
+                formLabelWidth: '120px',
+                salesmanShow: false,
+                wxNickShow: false,
+                wxPhoneShow: false,
+                addressShow: false,
+                phone2Show: false,
+                salesListShow: false,
+                promiseShow:false,
+                phoneContentShow: false,
+                ksShow: false,
+                ksContentShow: false,
+                dyShow: false,
+                dyContentShow: false,
+                pddShow: false,
+                pddContentShow: false,
+                qqShow: false,
+                qqContentShow: false,
+                tbwwShow: false,
+                tbwwContentShow: false,
+                emailShow: false,
+                baiduShow: false,
+                baiduContentShow: false,
+                indexPageShow: false,
+                remarkShow: false,
+                connectListShow: false,
+                provinceShow: false,
+                cityShow: false,
+                areaShow: false,
+                countryShow: false,
+                logistialAddressShow: false,
+                cGroupShow: false,
+                textShow1: false,
+                textShow2: false,
+                textShow3: false,
+                textShow4: false,
+                textShow5: false,
+                textShow6: false,
+                level:'',
+                isNew:'',
+                cType:'',
+                menu:'',
+                company:'',
+                cName:'',
+                product:'',
+                phone:'',
+                salesman:'',
+                wxNick:'',
+                wxPhone:'',
+                address:'',
+                phone2:'',
+                salesList:'',
+                promise:'',
+                phoneContent:'',
+                ks:'',
+                ksContent:'',
+                dy:'',
+                dyContent:'',
+                pdd:'',
+                pddContent:'',
+                qq:'',
+                qqContent:'',
+                tbww:'',
+                tbwwContent:'',
+                email:'',
+                baidu:'',
+                baiduContent:'',
+                indexPage:'',
+                remark:'',
+                connectList:'',
+                province:'',
+                city:'',
+                area:'',
+                country:'',
+                logistialAddress:'',
+                cGroup:'',
+                text1:'',
+                text2:'',
+                text3:'',
+                text4:'',
+                text5:'',
+                text6:'',
+
+                name: "张三",
+                fileList: [],
+                uploadTag: false,
+                h: ((document.documentElement.clientHeight || document.body.clientHeight)-220)+'px',
+                share: true,
+                updateObj: {},
+                updateModal: false,
+                urls: [
+
+                ]
+
+            }
+
+
+        },created:function () {
+            let that = this;
+            // that.findTableData()
+        } ,
+        methods: {
+            qued(){
+                this.dialogFormVisible = false;
+            },
+            cancel(){
+                let t = this;
+                this.dialogFormVisible = false;
+                t.salesman = '';
+                t.wxNick = '';
+                t.wxPhone = '';
+                t.address = '';
+                t.phone2 = '';
+                t.salesList = '';
+                t.promise = '';
+                t.phoneContent = '';
+                t.ks = '';
+                t.ksContent = '';
+                t.dy = '';
+                t.dyContent ='';
+                t.pdd ='';
+                t.pddContent ='';
+                t.qq = '';
+                t.tbww = '';
+                t.tbwwContent = '';
+                t.email = '';
+                t.baidu = '';
+                t.baiduContent = '';
+                t.indexPage = '';
+                t.remark = '';
+                t.connectList = '';
+                t.province = '';
+                t.city = '';
+                t.area = '';
+                t.country  ='';
+                t.logistialAddress = '';
+                t.cGroup = '';
+            },
+            batchOperate(command) {
+                console.log(command)
+                let t = this;
+                switch (command) {
+                    case "salesman":
+                        t.salesmanShow = !t.salesmanShow;
+                        if(!t.salesmanShow){
+                            t.salesman = '';
+                        }
+                        break;
+                    case "wx_nick":
+                        t.wxNickShow = !t.wxNickShow;
+                        if(!t.wxNickShow){
+                            t.wxNick =  '';
+                        }
+                        break;
+                    case "wx_phone":
+                        t.wxPhoneShow = !t.wxPhoneShow;
+                        if(!t.wxPhoneShow){
+                            t.wxPhoneShow = '';
+                        }
+                        break;
+                    case "address":
+                        t.addressShow = !t.addressShow;
+                        if(!t.addressShow){
+                            t.address = '';
+                        }
+                        break;
+                    case "phone2":
+                        t.phone2Show =  !t.phone2Show ;
+                        if(!t.phone2Show){
+                            t.phone2 = '';
+                        }
+                        break;
+                    case "sales_list":
+                        t.salesListShow =  !t.salesListShow ;
+                        if(!t.salesListShow){
+                            t.salesList = ''
+                        }
+                        break;
+                    case "promise":
+                        t.promiseShow =  !t.promiseShow ;
+                        if(!t.promiseShow){
+                            t.promise =  '';
+                        }
+                        break;
+                    case "phone_content":
+                        t.phoneContentShow = !t.phoneContentShow;
+                        if(!t.phoneContentShow){
+                            t.phoneContent =  '';
+                        }
+                        break;
+                    case "ks":
+                        t.ksShow = !t.ksShow;
+                        if(!t.ksShow){
+                            t.ks =  '';
+                        }
+                        break;
+                    case "ks_content":
+                        t.ksContentShow = !t.ksContentShow;
+                        if(!t.ksContentShow){
+                            t.ksContent = '';
+                        }
+                        break;
+                    case "dy":
+                        t.dyShow = !t.dyShow;
+                        if(!t.dyShow){
+                            t.dy = '';
+                        }
+                        break;
+                    case "pdd":
+                        t.pddShow = !t.pddShow;
+                        if(!t.pddShow){
+                            t.pdd = '';
+                        }
+                        break;
+                    case "pdd_content":
+                        t.pddContentShow = !t.pddContentShow;
+                        if(!t.pddContentShow){
+                            t.pddContent = '';
+                        }
+                        break;
+                    case "qq":
+                        t.qqShow = !t.qqShow;
+                        if(!t.qqShow){
+                            t.qq  = '';
+                        }
+                        break;
+                    case "qq_content":
+                        t.qqContentShow = !t.qqContentShow;
+                        if(!t.qqContentShow){
+                            t.qqContent  = '';
+                        }
+                        break;
+                    case "tbww":
+                        t.tbwwShow = !t.tbwwShow;
+                        if(!t.tbwwShow){
+                            t.tbww = '';
+                        }
+                        break;
+                    case "tbww_content":
+                        t.tbwwContentShow = !t.tbwwContentShow;
+                        if(!t.tbwwContentShow){
+                            t.tbww = '';
+                        }
+                        break;
+                    case "email":
+                        t.emailShow = !t.emailShow;
+                        if(!t.tbwwContentShow){
+                            t.email = '';
+                        }
+                        break;
+                    case "baidu":
+                        t.baiduShow = !t.baiduShow;
+                        if(!t.baiduShow){
+                            t.baidu =  '';
+                        }
+                        break;
+                    case "baidu_content":
+                        t.baiduContentShow = !t.baiduContentShow;
+                        if(!t.baiduContentShow){
+                            t.baiduContent = ''
+                        }
+                        break;
+                    case "index_page":
+                        t.indexPageShow =  !t.indexPageShow;
+                        if(!t.indexPageShow){
+                            t.indexPage =  '';
+                        }
+                        break;
+                    case "remark":
+                        t.remarkShow = !t.remarkShow;
+                        if(!t.remarkShow){
+                            t.remark = '';
+                        }
+                        break;
+                    case "connect_list":
+                        t.connectListShow = !t.connectListShow;
+                        if(!t.connectListShow){
+                            t.connectList = '';
+                        }
+                        break;
+                    case "province":
+                        t.provinceShow = !t.provinceShow;
+                        if(!t.provinceShow){
+                            t.province = '';
+                        }
+                        break;
+                    case "city":
+                        t.cityShow = !t.cityShow;
+                        if(!t.cityShow){
+                            t.city = '';
+                        }
+                        break;
+                    case "area":
+                        t.areaShow =  !t.areaShow;
+                        if(!t.areaShow){
+                            t.area = '';
+                        }
+                        break;
+                    case "country":
+                        t.countryShow = !t.countryShow ;
+                        if(!t.countryShow){
+                            t.country = '';
+                        }
+                        break;
+                    case "logistial_address":
+                        t.logistialAddressShow =  !t.logistialAddressShow;
+                        if(!t.logistialAddressShow){
+                            t.logistialAddress = '';
+                        }
+                        break;
+                    case "c_group":
+                        t.cGroupShow = !t.cGroupShow;
+                        if( !t.cGroupShow){
+                            t.cGroup = '';
+                        }
+                        break;
+                    case "text_1":
+                        t.textShow1 = !t.textShow1;
+                        if( !t.textShow1){
+                            t.text1 = '';
+                        }
+                        break;
+                    case "text_2":
+                        t.textShow2 = !t.textShow2;
+                        if( !t.textShow2){
+                            t.text2 = '';
+                        }
+                        break;
+
+                    case "text_3":
+                        t.textShow3 = !t.textShow3;
+                        if( !t.textShow3){
+                            t.text3 = '';
+                        }
+                        break;
+                    case "text_4":
+                        t.textShow4 = !t.textShow4;
+                        if( !t.textShow4){
+                            t.text4 = '';
+                        }
+                        break;
+                    case "text_5":
+                        t.textShow5 = !t.textShow5;
+                        if( !t.textShow5){
+                            t.text5 = '';
+                        }
+                        break;
+                    case "text_6":
+                        t.textShow6 = !t.textShow6;
+                        if( !t.textShow6){
+                            t.text6 = '';
+                        }
+                        break;
+                }
+
+            } ,
+
+            handleChange(file, fileList) {
+                this.fileList = fileList.slice(-3);
+            },
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file) {
+                console.log(file);
+            },findTableData(){
+                let t = this;
+                let params = {};
+                params.pageIndex = t.pageIndex;
+                params.pageSize = 10;
+                if (t.phone!==''){
+                    params.phone = t.phone;
+                }
+                if (t.level!==''){
+                    params.level = t.level;
+                }
+                if (t.isNew!==''){
+                    params.isNew = t.isNew;
+                }
+                if (t.cType!==''){
+                    params.cType = t.cType;
+                }
+                if (t.menu!==''){
+                    params.menu = t.menu;
+                }
+                if (t.company!==''){
+                    params.company = t.company;
+                }
+                if (t.cName!==''){
+                    params.cName = t.cName;
+                }
+                if (t.product!==''){
+                    params.product =  t.product;
+                }
+                if (t.salesman!==''){
+                    params.salesman = t.salesman;
+                }
+                if (t.wxNick!==''){
+                    params.wxNick = t.wxNick;
+                }
+                if (t.wxPhone!==''){
+                    params.wxPhone = t.wxPhone;
+                }
+                if (t.address!==''){
+                    params.address = t.address;
+                }
+                if (t.phone2!==''){
+                    params.phone2 = t.phone2;
+                }
+                if (t.salesList!==null){
+                    params.salesList = t.salesList;
+                }
+                if (t.promise!==null){
+                    params.promise = t.promise;
+                }
+                if (t.phoneContent!==''){
+                    params.phoneContent = t.phoneContent;
+                }
+                if (t.ks!==''){
+                    params.ks = t.ks;
+                }
+                if (t.ksContent!==''){
+                    params.ksContent = t.ksContent;
+                }
+                if (t.dy!==''){
+                    params.dy = t.dy;
+                }
+                if (t.dyContent!==''){
+                    params.dyContent = t.dyContent;
+                }
+                if (t.pdd!==''){
+                    params.pdd = t.pdd;
+                }
+                if (t.pddContent!==''){
+                    params.pddContent = t.pddContent;
+                }
+                if (t.qq!==''){
+                    params.qq =  t.qq;
+                }
+                if (t.qqContent!==null){
+                    params.qqContent = t.qqContent;
+                }
+                if (t.tbww!==''){
+                    params.tbww = t.tbww;
+                }
+                if (t.tbwwContent!==''){
+                    params.tbwwContent = t.tbwwContent;
+                }
+                if (t.email!==''){
+                    params.email = t.email;
+                }
+                if (t.baidu!==''){
+                    params.baidu = t.baidu;
+                }
+                if (t.baiduContent!==''){
+                    params.baiduContent = t.baiduContent;
+                }
+                if (t.indexPage!==''){
+                    params.indexPage = t.indexPage;
+                }
+                if (t.remark!==''){
+                    params.remark = t.remark;
+                }
+                if (t.connectList!==''){
+                    params.connectList = t.connectList;
+                }
+                if (t.province!==''){
+                    params.province = t.province;
+                }
+                if (t.city!==''){
+                    params.city = t.city;
+                }
+                if (t.area!==''){
+                    params.area = t.area;
+                }
+                if (t.country!==''){
+                    params.country = t.country;
+                }
+                if (t.village!==''){
+                    params.village = t.village;
+                }
+                if (t.agency!==''){
+                    params.agency = t.agency;
+                }
+                axios
+                    .get('http://'+local+'/findAll',{
+                        params:params
+                    })
+                    .then(function (response) {
+                        console.log(response.data)
+                        t.tableData = response.data.data.list;
+                        t.total =response.data.data.count;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },prevClick(){
+                console.log("上一页")
+            },nextClick(){
+              console.log("下一页")
+            },currentChange(p){
+                let t = this;
+                t.pageIndex = p;
+                t.findTableData();
+            },handleClick(row){
+                let t  = this;
+                t.updateObj = row;
+                axios.get('http://'+local+'/findImgUrl',{
+                        params:{phone:row.phone}
+                    })
+                    .then(function (response) {
+                        t.urls = response.data.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+
+                t.updateModal = true
+            },
+            saveUpdate(){
+                let t = this;
+                let data = t.updateObj;
+                axios
+                    .get('http://'+local+'/update',{params:data},
+
+                    )
+                    .then(function (response) {
+                        t.updateModal = false;
+                        // t.tableData = response.data.data.list;
+                        // t.total =response.data.data.count;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+
+        }
+    })
+</script>
 </body>
 </html>

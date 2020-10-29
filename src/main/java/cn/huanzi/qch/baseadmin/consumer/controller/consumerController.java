@@ -1,8 +1,520 @@
 package cn.huanzi.qch.baseadmin.consumer.controller;
 
+import cn.huanzi.qch.baseadmin.common.pojo.Result;
+import cn.huanzi.qch.baseadmin.consumer.entity.SysConsumer;
+import cn.huanzi.qch.baseadmin.consumer.repository.SysConsumerRepository;
+import cn.huanzi.qch.baseadmin.consumer.service.SysConsumerService;
+import cn.huanzi.qch.baseadmin.util.SecurityUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelUtil;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import javax.persistence.criteria.*;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author create by zhaoxu
  * @create 2020/10/20
  */
+@RestController
 public class consumerController {
+    @Autowired
+    private SysConsumerRepository sysConsumerRepository;
+
+    String filepath = "D:/picture/";
+
+    @GetMapping("update")
+    public Result update(
+            @RequestParam(required = true,name = "cid")Long cid,
+            @RequestParam(required = false,name = "level")String level,
+            @RequestParam(required = false,name = "isNew")String isNew,
+            @RequestParam(required = false,name = "cType")String cType,
+            @RequestParam(required = false,name = "menu")String menu,
+            @RequestParam(required = false,name = "company")String company,
+            @RequestParam(required = false,name = "cName")String cName,
+            @RequestParam(required = false,name = "phone")String phone,
+            @RequestParam(required = false,name = "product")String product,
+            @RequestParam(required = false,name = "salesman")String salesman,
+            @RequestParam(required = false,name = "wxNick")String wxNick,
+            @RequestParam(required = false,name = "wxPhone")String wxPhone,
+            @RequestParam(required = false,name = "province")String province,
+            @RequestParam(required = false,name = "city")String city,
+            @RequestParam(required = false,name = "area")String area,
+            @RequestParam(required = false,name = "country")String country,
+            @RequestParam(required = false,name = "village")String village,
+            @RequestParam(required = false,name = "agency")String agency,
+            @RequestParam(required = false,name = "salesList")String salesList,
+            @RequestParam(required = false,name = "promise")String promise,
+            @RequestParam(required = false,name = "phoneContent")String phoneContent,
+            @RequestParam(required = false,name = "ks")String ks,
+            @RequestParam(required = false,name = "ksContent")String ksContent,
+            @RequestParam(required = false,name = "dy")String dy,
+            @RequestParam(required = false,name = "dyContent")String dyContent,
+            @RequestParam(required = false,name = "pdd")String pdd,
+            @RequestParam(required = false,name = "pddContent")String pddContent,
+            @RequestParam(required = false,name = "qq")String qq,
+            @RequestParam(required = false,name = "qqContent")String qqContent,
+            @RequestParam(required = false,name = "tbww")String tbww,
+            @RequestParam(required = false,name = "tbwwContent")String tbwwContent,
+            @RequestParam(required = false,name = "email")String email,
+            @RequestParam(required = false,name = "baidu")String baidu,
+            @RequestParam(required = false,name = "baiduContent")String baiduContent,
+            @RequestParam(required = false,name = "indexPage")String indexPage,
+            @RequestParam(required = false,name = "remark")String remark,
+            @RequestParam(required = false,name = "connectList")String connectList,
+            @RequestParam(required = false,name = "address")String address,
+            @RequestParam(required = false,name = "logistialAddress")String logistialAddress,
+            @RequestParam(required = false,name = "group")String group,
+            @RequestParam(required = false,name = "text1")String text1,
+            @RequestParam(required = false,name = "text2")String text2,
+            @RequestParam(required = false,name = "text3")String text3,
+            @RequestParam(required = false,name = "text4")String text4,
+            @RequestParam(required = false,name = "text5")String text5,
+            @RequestParam(required = false,name = "text6")String text6
+    ){
+        SysConsumer sysConsumer = new SysConsumer();
+        sysConsumer.setCid(cid);
+        sysConsumer.setLevel(level);
+        sysConsumer.setIsNew(isNew);
+        sysConsumer.setCType(cType);
+        sysConsumer.setMenu(menu);
+        sysConsumer.setCompany(company);
+        sysConsumer.setCName(cName);
+        sysConsumer.setPhone(phone);
+        sysConsumer.setProduct(product);
+        sysConsumer.setSalesman(salesman);
+        sysConsumer.setWxNick(wxNick);
+        sysConsumer.setWxPhone(wxPhone);
+        sysConsumer.setProvince(province);
+        sysConsumer.setCity(city);
+        sysConsumer.setArea(area);
+        sysConsumer.setCountry(country);
+        sysConsumer.setVillage(village);
+        sysConsumer.setAgency(agency);
+        sysConsumer.setSalesList(salesList);
+        sysConsumer.setPromise(promise);
+        sysConsumer.setPhoneContent(phoneContent);
+        sysConsumer.setKs(ks);
+        sysConsumer.setKsContent(ksContent);
+        sysConsumer.setDy(dy);
+        sysConsumer.setDyContent(dyContent);
+        sysConsumer.setPdd(pdd);
+        sysConsumer.setPddContent(pddContent);
+        sysConsumer.setQq(qq);
+        sysConsumer.setQqContent(qqContent);
+        sysConsumer.setTbww(tbww);
+        sysConsumer.setTbwwContent(tbwwContent);
+        sysConsumer.setEmail(email);
+        sysConsumer.setBaidu(baidu);
+        sysConsumer.setBaiduContent(baiduContent);
+        sysConsumer.setIndexPage(indexPage);
+        sysConsumer.setRemark(remark);
+        sysConsumer.setConnectList(connectList);
+        sysConsumer.setAddress(address);
+        sysConsumer.setLogistialAddress(logistialAddress);
+        sysConsumer.setGroup(group);
+        sysConsumer.setText1(text1);
+        sysConsumer.setText2(text2);
+        sysConsumer.setText3(text3);
+        sysConsumer.setText4(text4);
+        sysConsumer.setText5(text5);
+        sysConsumer.setText6(text6);
+        sysConsumerRepository.saveAndFlush(sysConsumer);
+        return Result.of(sysConsumer);
+    }
+    @GetMapping("findAll")
+    public Result findAll(
+            @RequestParam(value = "pageIndex",defaultValue = "1")Integer pageIndex,
+            @RequestParam(value = "pageSize",defaultValue = "10")Integer pageSize,
+            @RequestParam(required = false,name = "level")String level,
+            @RequestParam(required = false,name = "isNew")String isNew,
+            @RequestParam(required = false,name = "cType")String cType,
+            @RequestParam(required = false,name = "menu")String menu,
+            @RequestParam(required = false,name = "company")String company,
+            @RequestParam(required = false,name = "cName")String cName,
+            @RequestParam(required = false,name = "phone")String phone,
+            @RequestParam(required = false,name = "product")String product,
+            @RequestParam(required = false,name = "salesman")String salesman,
+            @RequestParam(required = false,name = "wxNick")String wxNick,
+            @RequestParam(required = false,name = "wxPhone")String wxPhone,
+            @RequestParam(required = false,name = "province")String province,
+            @RequestParam(required = false,name = "city")String city,
+            @RequestParam(required = false,name = "area")String area,
+            @RequestParam(required = false,name = "country")String country,
+            @RequestParam(required = false,name = "village")String village,
+            @RequestParam(required = false,name = "agency")String agency,
+            @RequestParam(required = false,name = "salesList")String salesList,
+            @RequestParam(required = false,name = "promise")String promise,
+            @RequestParam(required = false,name = "phoneContent")String phoneContent,
+            @RequestParam(required = false,name = "ks")String ks,
+            @RequestParam(required = false,name = "ksContent")String ksContent,
+            @RequestParam(required = false,name = "dy")String dy,
+            @RequestParam(required = false,name = "dyContent")String dyContent,
+            @RequestParam(required = false,name = "pdd")String pdd,
+            @RequestParam(required = false,name = "pddContent")String pddContent,
+            @RequestParam(required = false,name = "qq")String qq,
+            @RequestParam(required = false,name = "qqContent")String qqContent,
+            @RequestParam(required = false,name = "tbww")String tbww,
+            @RequestParam(required = false,name = "tbwwContent")String tbwwContent,
+            @RequestParam(required = false,name = "email")String email,
+            @RequestParam(required = false,name = "baidu")String baidu,
+            @RequestParam(required = false,name = "baiduContent")String baiduContent,
+            @RequestParam(required = false,name = "indexPage")String indexPage,
+            @RequestParam(required = false,name = "remark")String remark,
+            @RequestParam(required = false,name = "connectList")String connectList,
+            @RequestParam(required = false,name = "address")String address,
+            @RequestParam(required = false,name = "logistialAddress")String logistialAddress,
+            @RequestParam(required = false,name = "group")String group,
+            @RequestParam(required = false,name = "text1")String text1,
+            @RequestParam(required = false,name = "text2")String text2,
+            @RequestParam(required = false,name = "text3")String text3,
+            @RequestParam(required = false,name = "text4")String text4,
+            @RequestParam(required = false,name = "text5")String text5,
+            @RequestParam(required = false,name = "text6")String text6
+
+    ){
+        List<SysConsumer> result = new ArrayList<>();
+        Long count = 0L;
+        Specification<SysConsumer> queryCondition = new Specification<SysConsumer>() {
+            @Override
+            public Predicate toPredicate(Root<SysConsumer> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicateList = new ArrayList<>();
+                if (StrUtil.isNotEmpty(level)){
+                    predicateList.add(criteriaBuilder.like(root.get("level"), "%"+level+"%"));
+                }
+                if (StrUtil.isNotEmpty(isNew)){
+                    predicateList.add(criteriaBuilder.like(root.get("isNew"), "%"+isNew+"%"));
+                }
+                if (StrUtil.isNotEmpty(cType)){
+                    predicateList.add(criteriaBuilder.like(root.get("cType"), "%"+cType+"%"));
+                }
+                if (StrUtil.isNotEmpty(menu)){
+                    predicateList.add(criteriaBuilder.like(root.get("menu"), "%"+menu+"%"));
+                }
+                if (StrUtil.isNotEmpty(company)){
+                    predicateList.add(criteriaBuilder.like(root.get("company"), "%"+company+"%"));
+                }
+                if (StrUtil.isNotEmpty(cName)){
+                    predicateList.add(criteriaBuilder.like(root.get("cName"),"%"+ cName+"%"));
+                }
+                if (StrUtil.isNotEmpty(phone)) {
+                    predicateList.add(criteriaBuilder.like(root.get("phone"), "%"+phone+"%"));
+                }
+                if(StrUtil.isNotEmpty(product)){
+                    predicateList.add(criteriaBuilder.like(root.get("product"),"%"+ product+"%"));
+                }
+                if(StrUtil.isNotEmpty(salesman)){
+                    predicateList.add(criteriaBuilder.like(root.get("salesman"),"%"+ salesman+"%"));
+                }
+                if(StrUtil.isNotEmpty(wxNick)){
+                    predicateList.add(criteriaBuilder.like(root.get("wxNick"),"%"+ wxNick+"%"));
+                }
+                if(StrUtil.isNotEmpty(wxPhone)){
+                    predicateList.add(criteriaBuilder.like(root.get("wxPhone"),"%"+ wxPhone+"%"));
+                }
+                if(StrUtil.isNotEmpty(province)){
+                    predicateList.add(criteriaBuilder.like(root.get("province"),"%"+ province+"%"));
+                }
+                if(StrUtil.isNotEmpty(city)){
+                    predicateList.add(criteriaBuilder.like(root.get("city"),"%"+ city+"%"));
+                }
+                if(StrUtil.isNotEmpty(area)){
+                    predicateList.add(criteriaBuilder.like(root.get("area"),"%"+ area+"%"));
+                }
+                if(StrUtil.isNotEmpty(country)){
+                    predicateList.add(criteriaBuilder.like(root.get("country"),"%"+ country+"%"));
+                }
+                if(StrUtil.isNotEmpty(village)){
+                    predicateList.add(criteriaBuilder.like(root.get("village"),"%"+ village+"%"));
+                }
+                if(StrUtil.isNotEmpty(agency)){
+                    predicateList.add(criteriaBuilder.like(root.get("agency"),"%"+ agency+"%"));
+                }
+                if(StrUtil.isNotEmpty(salesList)){
+                    predicateList.add(criteriaBuilder.like(root.get("salesList"),"%"+ salesList+"%"));
+                }
+                if(StrUtil.isNotEmpty(promise)){
+                    predicateList.add(criteriaBuilder.like(root.get("promise"),"%"+ promise+"%"));
+                }
+                if(StrUtil.isNotEmpty(phoneContent)){
+                    predicateList.add(criteriaBuilder.like(root.get("phoneContent"),"%"+ phoneContent+"%"));
+                }
+                if(StrUtil.isNotEmpty(ks)){
+                    predicateList.add(criteriaBuilder.like(root.get("ks"),"%"+ ks+"%"));
+                }
+                if(StrUtil.isNotEmpty(ksContent)){
+                    predicateList.add(criteriaBuilder.like(root.get("ksContent"),"%"+ ksContent+"%"));
+                }
+                if(StrUtil.isNotEmpty(dy)){
+                    predicateList.add(criteriaBuilder.like(root.get("dy"),"%"+ dy+"%"));
+                }
+                if(StrUtil.isNotEmpty(dyContent)){
+                    predicateList.add(criteriaBuilder.like(root.get("dyContent"),"%"+ dyContent+"%"));
+                }
+                if(StrUtil.isNotEmpty(pdd)){
+                    predicateList.add(criteriaBuilder.like(root.get("pdd"),"%"+ pdd+"%"));
+                }
+                if(StrUtil.isNotEmpty(pddContent)){
+                    predicateList.add(criteriaBuilder.like(root.get("pddContent"),"%"+ pddContent+"%"));
+                }
+                if(StrUtil.isNotEmpty(qq)){
+                    predicateList.add(criteriaBuilder.like(root.get("qq"),"%"+ qq+"%"));
+                }
+                if(StrUtil.isNotEmpty(qqContent)){
+                    predicateList.add(criteriaBuilder.like(root.get("qqContent"),"%"+ qqContent+"%"));
+                }
+                if(StrUtil.isNotEmpty(tbww)){
+                    predicateList.add(criteriaBuilder.like(root.get("tbww"),"%"+ tbww+"%"));
+                }
+                if(StrUtil.isNotEmpty(tbwwContent)){
+                    predicateList.add(criteriaBuilder.like(root.get("tbwwContent"),"%"+ tbwwContent+"%"));
+                }
+                if(StrUtil.isNotEmpty(email)){
+                    predicateList.add(criteriaBuilder.like(root.get("email"),"%"+ email+"%"));
+                }
+                if(StrUtil.isNotEmpty(baidu)){
+                    predicateList.add(criteriaBuilder.like(root.get("baidu"),"%"+ baidu+"%"));
+                }
+                if(StrUtil.isNotEmpty(baiduContent)){
+                    predicateList.add(criteriaBuilder.like(root.get("baiduContent"),"%"+ baiduContent+"%"));
+                }
+                if(StrUtil.isNotEmpty(indexPage)){
+                    predicateList.add(criteriaBuilder.like(root.get("indexPage"),"%"+ indexPage+"%"));
+                }
+                if(StrUtil.isNotEmpty(remark)){
+                    predicateList.add(criteriaBuilder.like(root.get("remark"),"%"+ remark+"%"));
+                }
+                if(StrUtil.isNotEmpty(connectList)){
+                    predicateList.add(criteriaBuilder.like(root.get("connectList"),"%"+ connectList+"%"));
+                }
+                if(StrUtil.isNotEmpty(address)){
+                    predicateList.add(criteriaBuilder.like(root.get("address"),"%"+ address+"%"));
+                }
+                if(StrUtil.isNotEmpty(logistialAddress)){
+                    predicateList.add(criteriaBuilder.like(root.get("logistialAddress"),"%"+ logistialAddress+"%"));
+                }
+                if(StrUtil.isNotEmpty(group)){
+                    predicateList.add(criteriaBuilder.like(root.get("cGroup"),"%"+ group+"%"));
+                }else {
+                    String userName = SecurityUtil.getLoginUser().getUsername();
+                    Predicate pred1 = criteriaBuilder.equal(root.get("group"), userName);
+                    Predicate pred2 = criteriaBuilder.isNull(root.get("group"));
+
+                    predicateList.add(criteriaBuilder.or(pred1, pred2));
+
+                }
+                if(StrUtil.isNotEmpty(text1)){
+                    predicateList.add(criteriaBuilder.like(root.get("text1"),"%"+ text1+"%"));
+                }
+                if(StrUtil.isNotEmpty(text2)){
+                    predicateList.add(criteriaBuilder.like(root.get("text2"),"%"+ text2+"%"));
+                }
+                if(StrUtil.isNotEmpty(text3)){
+                    predicateList.add(criteriaBuilder.like(root.get("text3"),"%"+ text3+"%"));
+                }
+                if(StrUtil.isNotEmpty(text4)){
+                    predicateList.add(criteriaBuilder.like(root.get("text4"),"%"+ text4+"%"));
+                }
+                if(StrUtil.isNotEmpty(text5)){
+                    predicateList.add(criteriaBuilder.like(root.get("text5"),"%"+ text5+"%"));
+                }
+                if(StrUtil.isNotEmpty(text6)){
+                    predicateList.add(criteriaBuilder.like(root.get("text6"),"%"+ text6+"%"));
+                }
+                predicateList.add(criteriaBuilder.equal(root.get("stats"),"1"));
+
+                return    criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
+            }
+        };
+
+        Page page  = sysConsumerRepository.findAll(queryCondition, PageRequest.of(pageIndex - 1, pageSize, Sort.by(Sort.Direction.DESC, "cid")));
+        result = page.getContent();
+        count = page.getTotalElements();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("list",result);
+        jsonObject.put("count",count);
+        return Result.of(jsonObject);
+    }
+    @GetMapping("findList")
+    public Result findList(@RequestParam(value = "pageIndex",defaultValue = "1")Integer pageIndex,
+                           @RequestParam(value = "pageSize",defaultValue = "10")Integer pageSize
+                           ){
+
+        int start = (pageIndex-1)*pageSize;
+        List<SysConsumer> page = sysConsumerRepository.findAllByParam(start,pageSize);
+        return Result.of(page);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @RequestMapping("/upload")
+    public Result upload(
+            MultipartFile multipartFile,
+            @RequestParam(value = "tag", defaultValue = "false") String tag,
+            @RequestParam(value = "share",defaultValue = "false")String share
+            ) throws IOException {
+        boolean b = Boolean.parseBoolean(tag);
+        boolean s = Boolean.parseBoolean(share);
+        List<List<Object>> list = ExcelUtil.getReader(multipartFile.getInputStream()).read();
+        int size = list.size();
+        String userName = SecurityUtil.getLoginUser().getUsername();
+        for (int i = 1; i < size; i++) {
+            List<Object> rowList = list.get(i);
+            SysConsumer sysConsumer = new SysConsumer();
+            try {
+                sysConsumer.setLevel(valueOf(rowList.get(0)));
+                sysConsumer.setIsNew(valueOf(rowList.get(1)));
+                sysConsumer.setCType(valueOf(rowList.get(2)));
+                sysConsumer.setMenu(valueOf(rowList.get(3)));
+                sysConsumer.setCompany(valueOf(rowList.get(4)));
+                sysConsumer.setCName(valueOf(rowList.get(5)));
+                sysConsumer.setPhone(valueOf(rowList.get(6)));
+                sysConsumer.setProduct(valueOf(rowList.get(7)));
+                sysConsumer.setImgUrl(valueOf(rowList.get(8)));
+                sysConsumer.setVideoUrl(valueOf(rowList.get(9)));
+                sysConsumer.setSalesman(valueOf(rowList.get(10)));
+                sysConsumer.setWxNick(valueOf(rowList.get(11)));
+                sysConsumer.setWxPhone(valueOf(rowList.get(12)));
+                sysConsumer.setAddress(valueOf(rowList.get(13)));
+                sysConsumer.setPhone2(valueOf(rowList.get(14)));
+                sysConsumer.setSalesList(valueOf(rowList.get(15)));
+                sysConsumer.setPromise(valueOf(rowList.get(16)));
+                sysConsumer.setPhoneContent(valueOf(rowList.get(17)));
+                sysConsumer.setKs(valueOf(rowList.get(18)));
+                sysConsumer.setKsContent(valueOf(rowList.get(19)));
+                sysConsumer.setDy(valueOf(rowList.get(20)));
+                sysConsumer.setDyContent(valueOf(rowList.get(21)));
+                sysConsumer.setPdd(valueOf(rowList.get(22)));
+                sysConsumer.setPddContent(valueOf(rowList.get(23)));
+                sysConsumer.setQq(valueOf(rowList.get(24)));
+                sysConsumer.setQqContent(valueOf(rowList.get(25)));
+                sysConsumer.setTbww(valueOf(rowList.get(26)));
+                sysConsumer.setTbwwContent(valueOf(rowList.get(27)));
+                sysConsumer.setEmail(valueOf(rowList.get(28)));
+                sysConsumer.setBaidu(valueOf(rowList.get(29)));
+                sysConsumer.setBaiduContent(valueOf(rowList.get(30)));
+                sysConsumer.setIndexPage(valueOf(rowList.get(31)));
+                sysConsumer.setRemark(valueOf(rowList.get(32)));
+                sysConsumer.setConnectList(valueOf(rowList.get(33)));
+                sysConsumer.setProvince(valueOf(rowList.get(34)));
+                sysConsumer.setCity(valueOf(rowList.get(35)));
+                sysConsumer.setArea(valueOf(rowList.get(36)));
+                sysConsumer.setVillage(valueOf(rowList.get(37)));
+                sysConsumer.setLogistialAddress(valueOf(rowList.get(38)));
+//                sysConsumer.setGroup(valueOf(rowList.get(39)));
+                if (s){
+                    sysConsumer.setGroup(userName);
+                }else {
+                    sysConsumer.setGroup("");
+                }
+                sysConsumer.setText1(valueOf(rowList.get(40)));
+                sysConsumer.setText2(valueOf(rowList.get(41)));
+                sysConsumer.setText3(valueOf(rowList.get(42)));
+                sysConsumer.setText4(valueOf(rowList.get(43)));
+                sysConsumer.setText5(valueOf(rowList.get(44)));
+                sysConsumer.setText6(valueOf(rowList.get(45)));
+            } catch (IndexOutOfBoundsException e) {
+            }
+            if (!b) {
+                sysConsumerRepository.updateSysConsumerStatus(sysConsumer.getPhone(),userName);
+            } else {
+                sysConsumerRepository.deleteAllByPhone(sysConsumer.getPhone(),userName);
+            }
+            sysConsumer.setStats("1");
+
+            sysConsumerRepository.save(sysConsumer);
+        }
+        return Result.of("success");
+    }
+
+    @GetMapping("file/getImg/{fileName}")
+    public void getImg(@PathVariable String fileName, HttpServletResponse response) throws UnsupportedEncodingException {
+        response.setHeader("content-type", "application/octet-stream");
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+        byte[] buffer = new byte[1024];
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        OutputStream os = null;
+//        String filepath = "/Volumes/SD/myfiles/";
+//        String filepath = "D:/picture/";
+        File file = new File(filepath+fileName);
+        try {
+            fis = new FileInputStream(file);
+            bis = new BufferedInputStream(fis);
+            os = response.getOutputStream();
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+            System.out.println("Download  successfully!");
+
+
+        } catch (Exception e) {
+            System.out.println("Download  failed!");
+
+
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (os!=null){
+                try {
+                    os.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    @GetMapping("findImgUrl")
+    public Result findImgUrl(@RequestParam("phone")String phone) throws UnknownHostException {
+       String url = "http://"+"222.174.180.94" +":"+"8888/file/getImg/";
+//       String url = "http://"+"127.0.0.1" +":"+"8888/file/getImg/";
+        List<String> reList = new ArrayList<>();
+//        String path = "/Volumes/SD/myfiles/";
+        File file = new File(filepath);
+        File[] files = file.listFiles();
+        for (File f : files) {
+            if (!f.isDirectory()){
+                System.out.println(f.getName());
+                String fileName = f.getName();
+                if (fileName.startsWith(phone)){
+                    reList.add(url+fileName);
+                }
+            }
+        }
+        return Result.of(reList);
+    }
+    private static String valueOf(Object str){
+         if (str==null){
+             return "";
+         }
+         return String.valueOf(str);
+    }
 }
