@@ -1,8 +1,10 @@
 package cn.huanzi.qch.baseadmin.consumer.controller;
 
 import cn.huanzi.qch.baseadmin.common.pojo.Result;
+import cn.huanzi.qch.baseadmin.consumer.entity.ConsumerMg;
 import cn.huanzi.qch.baseadmin.consumer.entity.SysConsumer;
 import cn.huanzi.qch.baseadmin.consumer.repository.SysConsumerRepository;
+import cn.huanzi.qch.baseadmin.consumer.service.ConsumerMgService;
 import cn.huanzi.qch.baseadmin.consumer.service.SysConsumerService;
 import cn.huanzi.qch.baseadmin.util.SecurityUtil;
 import cn.hutool.core.util.StrUtil;
@@ -22,6 +24,7 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,8 +35,251 @@ import java.util.List;
 public class consumerController {
     @Autowired
     private SysConsumerRepository sysConsumerRepository;
+    @Autowired
+    private ConsumerMgService consumerMgService;
 
     String filepath = "D:/picture/";
+
+
+    private List<String> StrToList(String str){
+        if (StrUtil.isEmpty(str)){
+            return new ArrayList<>();
+        }
+        String arr[]  = str.split("\n");
+        return  Arrays.asList(arr);
+    }
+
+    @GetMapping("updateConusmer")
+    public Result updateConusmer(
+            @RequestParam(required = true,name = "id")String id,
+            @RequestParam(required = false,name = "level")String level,
+            @RequestParam(required = false,name = "isNew")String isNew,
+            @RequestParam(required = false,name = "cType")String cType,
+            @RequestParam(required = false,name = "menu")String menu,
+            @RequestParam(required = false,name = "company")String company,
+            @RequestParam(required = false,name = "cName")String cName,
+            @RequestParam(required = false,name = "phone")String phone,
+            @RequestParam(required = false,name = "product")String product,
+            @RequestParam(required = false,name = "salesman")String salesman,
+            @RequestParam(required = false,name = "wxNick")String wxNick,
+            @RequestParam(required = false,name = "wxPhone")String wxPhone,
+            @RequestParam(required = false,name = "province")String province,
+            @RequestParam(required = false,name = "city")String city,
+            @RequestParam(required = false,name = "area")String area,
+            @RequestParam(required = false,name = "country")String country,
+            @RequestParam(required = false,name = "village")String village,
+            @RequestParam(required = false,name = "agency")String agency,
+            @RequestParam(required = false,name = "salesList")String salesList,
+            @RequestParam(required = false,name = "promise")String promise,
+            @RequestParam(required = false,name = "phoneContent")String phoneContent,
+            @RequestParam(required = false,name = "ks")String ks,
+            @RequestParam(required = false,name = "ksContent")String ksContent,
+            @RequestParam(required = false,name = "dy")String dy,
+            @RequestParam(required = false,name = "dyContent")String dyContent,
+            @RequestParam(required = false,name = "pdd")String pdd,
+            @RequestParam(required = false,name = "pddContent")String pddContent,
+            @RequestParam(required = false,name = "qq")String qq,
+            @RequestParam(required = false,name = "qqContent")String qqContent,
+            @RequestParam(required = false,name = "tbww")String tbww,
+            @RequestParam(required = false,name = "tbwwContent")String tbwwContent,
+            @RequestParam(required = false,name = "email")String email,
+            @RequestParam(required = false,name = "baidu")String baidu,
+            @RequestParam(required = false,name = "baiduContent")String baiduContent,
+            @RequestParam(required = false,name = "indexPage")String indexPage,
+            @RequestParam(required = false,name = "remark")String remark,
+            @RequestParam(required = false,name = "connectList")String connectList,
+            @RequestParam(required = false,name = "address")String address,
+            @RequestParam(required = false,name = "logistialAddress")String logistialAddress,
+            @RequestParam(required = false,name = "group")String group,
+            @RequestParam(required = false,name = "text1")String text1,
+            @RequestParam(required = false,name = "text2")String text2,
+            @RequestParam(required = false,name = "text3")String text3,
+            @RequestParam(required = false,name = "text4")String text4,
+            @RequestParam(required = false,name = "text5")String text5,
+            @RequestParam(required = false,name = "text6")String text6
+    ){
+        ConsumerMg consumerMg = consumerMgService.findConsumerMgById(id);
+        if (consumerMg==null){
+            return Result.of("数据异常");
+        }
+        consumerMg.setLevel(level);
+        consumerMg.setIsNew(isNew);
+        consumerMg.setCType(cType);
+        consumerMg.setPhone(phone);
+        if (StrUtil.isNotEmpty(menu)) {
+            List<String> menuList = StrToList(menu);
+            consumerMg.setMenu(menuList);
+        }
+
+        if (StrUtil.isNotEmpty(company) ) {
+            List<String> companyList = StrToList(company);
+            consumerMg.setCompany(companyList);
+        }
+
+        if (StrUtil.isNotEmpty(cName)) {
+            List<String> cNameList =StrToList(cName);
+            consumerMg.setCName(cNameList);
+        }
+
+        if (StrUtil.isNotEmpty(product)) {
+            List<String> productList = StrToList(product);
+            consumerMg.setProduct(productList);
+        }
+
+        if (StrUtil.isNotEmpty(salesman)) {
+            List<String> salesmanList = StrToList(salesman);
+            consumerMg.setSalesman(salesmanList);
+        }
+
+        if (StrUtil.isNotEmpty(wxNick)) {
+            List<String> wxNickList = StrToList(wxNick);
+            consumerMg.setWxNick(wxNickList);
+        }
+
+        if (StrUtil.isNotEmpty(wxPhone)) {
+            List<String> wxPhoneList = StrToList(wxPhone);
+            consumerMg.setWxPhone(wxPhoneList);
+        }
+
+        consumerMg.setProvince(province);
+        consumerMg.setCity(city);
+
+        if (StrUtil.isNotEmpty(salesList)) {
+            List<String> saleList = StrToList(salesList);
+            consumerMg.setSalesList(saleList);
+        }
+
+        if (StrUtil.isNotEmpty(promise)) {
+            List<String> promiseList = StrToList(promise);
+            consumerMg.setPromise(promiseList);
+        }
+
+        if (StrUtil.isNotEmpty(phoneContent)) {
+            List<String> phoneContentList = StrToList(phoneContent);
+            consumerMg.setPhoneContent(phoneContentList);
+        }
+
+        if (StrUtil.isNotEmpty(ks)) {
+            List<String> ksList = StrToList(ks);
+            consumerMg.setKs(ksList);
+        }
+
+        if (StrUtil.isNotEmpty(ksContent)) {
+            List<String> ksContentList = StrToList(ksContent);
+            consumerMg.setKsContent(ksContentList);
+        }
+
+        if (StrUtil.isNotEmpty(dy)) {
+            List<String> dyList = StrToList(dy);
+            consumerMg.setDy(dyList);
+        }
+
+        if (StrUtil.isNotEmpty(dyContent)) {
+            List<String> dyContentList = StrToList(dyContent);
+            consumerMg.setDyContent(dyContentList);
+        }
+
+        if (StrUtil.isNotEmpty(pdd)) {
+            List<String> pddList = StrToList(pdd);
+            consumerMg.setPdd(pddList);
+        }
+
+        if (StrUtil.isNotEmpty(pddContent)) {
+            List<String> pddContentList = StrToList(pddContent);
+            consumerMg.setPddContent(pddContentList);
+        }
+
+        if (StrUtil.isNotEmpty(qq)) {
+            List<String> qqList = StrToList(qq);
+            consumerMg.setQq(qqList);
+        }
+
+        if (StrUtil.isNotEmpty(qqContent)) {
+            List<String> qqContentList = StrToList(qqContent);
+            consumerMg.setQqContent(qqContentList);
+        }
+
+        if (StrUtil.isNotEmpty(tbww)) {
+            List<String> tbwwList = StrToList(tbww);
+            consumerMg.setTbww(tbwwList);
+        }
+
+        if (StrUtil.isNotEmpty(tbwwContent)) {
+            List<String> tbwwContentList = StrToList(tbwwContent);
+            consumerMg.setTbwwContent(tbwwContentList);
+        }
+
+        if (StrUtil.isNotEmpty(email)) {
+            List<String> emailList =StrToList(email);
+            consumerMg.setEmail(emailList);
+        }
+
+        if (StrUtil.isNotEmpty(baidu)) {
+            List<String> baiduList = StrToList(baidu);
+            consumerMg.setBaidu(baiduList);
+        }
+
+        if (StrUtil.isNotEmpty(baiduContent)) {
+            List<String> baiduContentList =StrToList(baiduContent);
+            consumerMg.setBaiduContent(baiduContentList);
+        }
+
+        if (StrUtil.isNotEmpty(indexPage)) {
+            List<String> indexPageList = StrToList(indexPage);
+            consumerMg.setIndexPage(indexPageList);
+        }
+
+        if (StrUtil.isNotEmpty(remark)) {
+            List<String> remarkList =StrToList(remark);
+            consumerMg.setRemark(remarkList);
+        }
+
+        if (StrUtil.isNotEmpty(connectList)) {
+            List<String> connectsList = StrToList(connectList);
+            consumerMg.setConnectList(connectsList);
+        }
+
+        if (StrUtil.isNotEmpty(address)) {
+            List<String> addressList = StrToList(address);
+            consumerMg.setAddress(addressList);
+        }
+
+        if (StrUtil.isNotEmpty(logistialAddress)) {
+            List<String> logistialAddressList = StrToList(logistialAddress);
+            consumerMg.setLogistialAddress(logistialAddressList);
+        }
+
+        if (StrUtil.isNotEmpty(text1)) {
+            List<String> textList1 = StrToList(text1);
+            consumerMg.setText1(textList1);
+        }
+
+        if (StrUtil.isNotEmpty(text2)) {
+            List<String> textList2 = StrToList(text2);
+            consumerMg.setText2(textList2);
+        }
+
+        if (StrUtil.isNotEmpty(text3)) {
+            List<String> textList3 = StrToList(text3);
+            consumerMg.setText3(textList3);
+        }
+
+        if (StrUtil.isNotEmpty(text4)) {
+            List<String> textList4 = StrToList(text4);
+            consumerMg.setText4(textList4);
+        }
+
+        if (StrUtil.isNotEmpty(text5)) {
+            List<String> textList5 = StrToList(text5);
+            consumerMg.setText5(textList5);
+        }
+
+        if (StrUtil.isNotEmpty(text6)) {
+            List<String> textList6 = StrToList(text6);
+            consumerMg.setText6(textList6);
+        }
+        return Result.of(consumerMgService.updateConsumerMg(consumerMg));
+    }
 
     @GetMapping("update")
     public Result update(
@@ -84,6 +330,7 @@ public class consumerController {
             @RequestParam(required = false,name = "text5")String text5,
             @RequestParam(required = false,name = "text6")String text6
     ){
+
         SysConsumer sysConsumer = new SysConsumer();
         sysConsumer.setCid(cid);
         sysConsumer.setLevel(level);
@@ -339,12 +586,224 @@ public class consumerController {
             }
         };
 
-        Page page  = sysConsumerRepository.findAll(queryCondition, PageRequest.of(pageIndex - 1, pageSize, Sort.by(Sort.Direction.DESC, "cid")));
-        result = page.getContent();
-        count = page.getTotalElements();
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("list",result);
-        jsonObject.put("count",count);
+//        Page page  = sysConsumerRepository.findAll(queryCondition, PageRequest.of(pageIndex - 1, pageSize, Sort.by(Sort.Direction.DESC, "cid")));
+//        result = page.getContent();
+//        count = page.getTotalElements();
+        ConsumerMg consumerMg = new ConsumerMg();
+        consumerMg.setLevel(level);
+        consumerMg.setIsNew(isNew);
+        consumerMg.setCType(cType);
+        consumerMg.setPhone(phone);
+        if (StrUtil.isNotEmpty(menu)) {
+            List<String> menuList = new ArrayList<>();
+            menuList.add(menu);
+            consumerMg.setMenu(menuList);
+        }
+
+        if (StrUtil.isNotEmpty(company) ) {
+            List<String> companyList = new ArrayList<>();
+            companyList.add(company);
+            consumerMg.setCompany(companyList);
+        }
+
+        if (StrUtil.isNotEmpty(cName)) {
+            List<String> cNameList =new ArrayList<>();
+            cNameList.add(cName);
+            consumerMg.setCName(cNameList);
+        }
+
+        if (StrUtil.isNotEmpty(product)) {
+            List<String> productList = new ArrayList<>();
+            productList.add(product);
+            consumerMg.setProduct(productList);
+        }
+
+        if (StrUtil.isNotEmpty(salesman)) {
+            List<String> salesmanList =new ArrayList<>();
+            salesmanList.add(salesman);
+            consumerMg.setSalesman(salesmanList);
+        }
+
+        if (StrUtil.isNotEmpty(wxNick)) {
+            List<String> wxNickList = new ArrayList<>();
+            wxNickList.add(wxNick);
+            consumerMg.setWxNick(wxNickList);
+        }
+
+        if (StrUtil.isNotEmpty(wxPhone)) {
+            List<String> wxPhoneList = new ArrayList<>();
+            wxPhoneList.add(wxPhone);
+            consumerMg.setWxPhone(wxPhoneList);
+        }
+
+        consumerMg.setProvince(province);
+        consumerMg.setCity(city);
+
+        if (StrUtil.isNotEmpty(salesList)) {
+            List<String> saleList = new ArrayList<>();
+            saleList.add(salesList);
+            consumerMg.setSalesList(saleList);
+        }
+
+        if (StrUtil.isNotEmpty(promise)) {
+            List<String> promiseList = new ArrayList<>();
+            promiseList.add(promise);
+            consumerMg.setPromise(promiseList);
+        }
+
+        if (StrUtil.isNotEmpty(phoneContent)) {
+            List<String> phoneContentList = new ArrayList<>();
+            phoneContentList.add(phoneContent);
+            consumerMg.setPhoneContent(phoneContentList);
+        }
+
+        if (StrUtil.isNotEmpty(ks)) {
+            List<String> ksList = new ArrayList<>();
+            ksList.add(ks);
+            consumerMg.setKs(ksList);
+        }
+
+        if (StrUtil.isNotEmpty(ksContent)) {
+            List<String> ksContentList = new ArrayList<>();
+            ksContentList.add(ksContent);
+            consumerMg.setKsContent(ksContentList);
+        }
+
+        if (StrUtil.isNotEmpty(dy)) {
+            List<String> dyList = new ArrayList<>();
+            dyList.add(dy);
+            consumerMg.setDy(dyList);
+        }
+
+        if (StrUtil.isNotEmpty(dyContent)) {
+            List<String> dyContentList = new ArrayList<>();
+            dyContentList.add(dyContent);
+            consumerMg.setDyContent(dyContentList);
+        }
+
+        if (StrUtil.isNotEmpty(pdd)) {
+            List<String> pddList = new ArrayList<>();
+            pddList.add(pdd);
+            consumerMg.setPdd(pddList);
+        }
+
+        if (StrUtil.isNotEmpty(pddContent)) {
+            List<String> pddContentList = new ArrayList<>();
+            pddContentList.add(pddContent);
+            consumerMg.setPddContent(pddContentList);
+        }
+
+        if (StrUtil.isNotEmpty(qq)) {
+            List<String> qqList = new ArrayList<>();
+            qqList.add(qq);
+            consumerMg.setQq(qqList);
+        }
+
+        if (StrUtil.isNotEmpty(qqContent)) {
+            List<String> qqContentList = new ArrayList<>();
+            qqContentList.add(qqContent);
+            consumerMg.setQqContent(qqContentList);
+        }
+
+        if (StrUtil.isNotEmpty(tbww)) {
+            List<String> tbwwList = new ArrayList<>();
+            tbwwList.add(tbww);
+            consumerMg.setTbww(tbwwList);
+        }
+
+        if (StrUtil.isNotEmpty(tbwwContent)) {
+            List<String> tbwwContentList = new ArrayList<>();
+            tbwwContentList.add(tbwwContent);
+            consumerMg.setTbwwContent(tbwwContentList);
+        }
+
+        if (StrUtil.isNotEmpty(email)) {
+            List<String> emailList = new ArrayList<>();
+            emailList.add(email);
+            consumerMg.setEmail(emailList);
+        }
+
+        if (StrUtil.isNotEmpty(baidu)) {
+            List<String> baiduList = new ArrayList<>();
+            baiduList.add(baidu);
+            consumerMg.setBaidu(baiduList);
+        }
+
+        if (StrUtil.isNotEmpty(baiduContent)) {
+            List<String> baiduContentList = new ArrayList<>();
+            baiduContentList.add(baiduContent);
+            consumerMg.setBaiduContent(baiduContentList);
+        }
+
+        if (StrUtil.isNotEmpty(indexPage)) {
+            List<String> indexPageList = new ArrayList<>();
+            indexPageList.add(indexPage);
+            consumerMg.setIndexPage(indexPageList);
+        }
+
+        if (StrUtil.isNotEmpty(remark)) {
+            List<String> remarkList =new ArrayList<>();
+            remarkList.add(remark);
+            consumerMg.setRemark(remarkList);
+        }
+
+        if (StrUtil.isNotEmpty(connectList)) {
+            List<String> connectsList = new ArrayList<>();
+            connectsList.add(connectList);
+            consumerMg.setConnectList(connectsList);
+        }
+
+        if (StrUtil.isNotEmpty(address)) {
+            List<String> addressList = new ArrayList<>();
+            addressList.add(address);
+            consumerMg.setAddress(addressList);
+        }
+
+        if (StrUtil.isNotEmpty(logistialAddress)) {
+            List<String> logistialAddressList = new ArrayList<>();
+            logistialAddressList.add(logistialAddress);
+            consumerMg.setLogistialAddress(logistialAddressList);
+        }
+
+        if (StrUtil.isNotEmpty(text1)) {
+            List<String> textList1 = new ArrayList<>();
+            textList1.add(text1);
+            consumerMg.setText1(textList1);
+        }
+
+        if (StrUtil.isNotEmpty(text2)) {
+            List<String> textList2 = new ArrayList<>();
+            textList2.add(text2);
+            consumerMg.setText2(textList2);
+        }
+
+        if (StrUtil.isNotEmpty(text3)) {
+            List<String> textList3 = new ArrayList<>();
+            textList3.add(text3);
+            consumerMg.setText3(textList3);
+        }
+
+        if (StrUtil.isNotEmpty(text4)) {
+            List<String> textList4 = new ArrayList<>();
+            textList4.add(text4);
+            consumerMg.setText4(textList4);
+        }
+
+        if (StrUtil.isNotEmpty(text5)) {
+            List<String> textList5 = new ArrayList<>();
+            textList5.add(text5);
+            consumerMg.setText5(textList5);
+        }
+
+        if (StrUtil.isNotEmpty(text6)) {
+            List<String> textList6 = new ArrayList<>();
+            textList6.add(text6);
+            consumerMg.setText6(textList6);
+        }
+        String userName = SecurityUtil.getLoginUser().getUsername();
+        consumerMg.setGroup(userName);
+
+        JSONObject jsonObject = consumerMgService.findConsumerMgByEntity(consumerMg,pageIndex-1,pageSize);
         return Result.of(jsonObject);
     }
     @GetMapping("findList")
@@ -357,6 +816,1340 @@ public class consumerController {
         return Result.of(page);
     }
 
+    @RequestMapping("upLoadData")
+    public Result upLoadData(
+                                MultipartFile multipartFile,
+                               @RequestParam(value = "tag", defaultValue = "false") String tag,
+                               @RequestParam(value = "share",defaultValue = "false")String share){
+        boolean b = Boolean.parseBoolean(tag);
+        boolean s = Boolean.parseBoolean(share);
+        List<List<Object>> list = new ArrayList<>();
+        try {
+            list = ExcelUtil.getReader(multipartFile.getInputStream()).read();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        int size = list.size();
+        String userName = SecurityUtil.getLoginUser().getUsername();
+        for (int i = 1; i < size; i++) {
+            List<Object> rowList = list.get(i);
+            String phone = valueOf(rowList.get(6));
+            if ( rowList.get(6)==null){
+                continue;
+            }
+            ConsumerMg consumerMg = consumerMgService.findConsumerMgByPhone(phone);
+            int len = rowList.size();
+            if (consumerMg==null){
+                consumerMg = new ConsumerMg();
+                consumerMg.setId(phone);
+                try {
+                    if (0<len&&null!=rowList.get(0)){
+                        consumerMg.setLevel(valueOf(rowList.get(0)));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                try {
+                    if (1<len&&null!=rowList.get(1)){
+                        consumerMg.setIsNew(valueOf(rowList.get(1)));
+                    }
+                }catch (Exception e){  e.printStackTrace();}
+
+                try {
+                    if (null!=rowList.get(2)&&2<len){
+                        consumerMg.setCType(valueOf(rowList.get(2)));
+                    }
+                }catch (Exception e){}
+
+                try {
+                    if (null!=rowList.get(3)&&3<len){
+                        List<String> menuList = new ArrayList<>();
+                        menuList.add(valueOf(rowList.get(3)));
+                        consumerMg.setMenu(menuList);
+                    }
+                }catch (Exception e){   }
+
+                try {
+                    if (null!=rowList.get(4)&&4<len){
+                        List<String> companyList = new ArrayList<>();
+                        companyList.add(valueOf(rowList.get(4)));
+                        consumerMg.setCompany(companyList);
+                    }
+                }catch (Exception e){}
+
+                try {
+                    if (null!=rowList.get(5)&&5<len){
+                        List<String> cNameList = new ArrayList<>();
+                        cNameList.add(valueOf(rowList.get(5)));
+                        consumerMg.setCName(cNameList);
+                    }
+                }catch (Exception e){}
+
+                try {
+                    if (null!=rowList.get(6)&&6<len){
+                        consumerMg.setPhone(valueOf(rowList.get(6)));
+                    }
+                }catch (Exception e){}
+
+                try {
+                    if (null!=rowList.get(7)&&7<len){
+                        List<String> productList = new ArrayList<>();
+                        productList.add(valueOf(rowList.get(7)));
+                        consumerMg.setProduct(productList);
+                    }
+                }catch (Exception e){
+
+                }
+
+                try {
+
+                    if (null!=rowList.get(8)&&8<len){
+                        List<String> imgUrlList = new ArrayList<>();
+                        imgUrlList.add(valueOf(rowList.get(8)));
+                        consumerMg.setImgUrl(imgUrlList);
+                    }
+                }catch (Exception e){
+
+                }
+
+                try {
+                    if (null!=rowList.get(9)&&9<len){
+
+                        List<String> videoUrlList = new ArrayList<>();
+                        videoUrlList.add(valueOf(rowList.get(9)));
+                        consumerMg.setVideoUrl(videoUrlList);
+                    }
+                }catch (Exception e){
+
+                }
+
+                try {
+                    if (null!=rowList.get(10)&&10<len){
+                        List<String> salesmanList = new ArrayList<>();
+                        salesmanList.add(valueOf(rowList.get(10)));
+                        consumerMg.setSalesman(salesmanList);
+                    }
+                }catch (Exception e){
+
+                }
+
+                try {
+                    if (null!=rowList.get(11)&&11<len){
+                        List<String> wxNickList = new ArrayList<>();
+                        wxNickList.add(valueOf(rowList.get(11)));
+                        consumerMg.setWxNick(wxNickList);
+                    }
+                }catch (Exception e){
+
+                }
+
+                try {
+                    if (null!=rowList.get(12)&&12<len){
+
+                        List<String> wxPhoneList = new ArrayList<>();
+                        wxPhoneList.add(valueOf(rowList.get(12)));
+                        consumerMg.setWxPhone(wxPhoneList);
+                    }
+                }catch (Exception e){
+
+                }
+
+                try {
+                    if (null!=rowList.get(13)&&13<len){
+                        List<String> addressList = new ArrayList<>();
+                        addressList.add(valueOf(rowList.get(13)));
+                        consumerMg.setAddress(addressList);
+                    }
+                }catch (Exception e){
+
+                }
+
+                try {
+                    if (null!=rowList.get(14)&&14<len){
+                        List<String> phone2List = new ArrayList<>();
+                        phone2List.add(valueOf(rowList.get(14)));
+                        consumerMg.setPhone2(phone2List);
+
+                    }
+                }catch (Exception e){
+
+                }
+
+                try {
+                    if (null!=rowList.get(15)&&15<len){
+                        List<String> salesList = new ArrayList<>();
+                        salesList.add(valueOf(rowList.get(15)));
+                        consumerMg.setSalesList(salesList);
+                    }
+                }catch (Exception e){
+
+                }
+
+                try {
+                    if (null!=rowList.get(16)&&16<len){
+                        List<String> promiseList = new ArrayList<>();
+                        promiseList.add(valueOf(rowList.get(16)));
+                        consumerMg.setPromise(promiseList);
+                    }
+                }catch (Exception e){
+
+                }
+                try {
+                    if (null!=rowList.get(17)&&17<len){
+                        List<String> phoneContentList = new ArrayList<>();
+                        phoneContentList.add(valueOf(rowList.get(17)));
+                        consumerMg.setPhoneContent(phoneContentList);
+                    }
+                } catch (Exception e) {
+
+                }
+                try {
+                    if (null!=rowList.get(18)&&18<len){
+                        List<String> ksList = new ArrayList<>();
+                        ksList.add(valueOf(rowList.get(18)));
+                        consumerMg.setKs(ksList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(19)&&19<len){
+                        List<String> ksContentList = new ArrayList<>();
+                        ksContentList.add(valueOf(rowList.get(19)));
+                        consumerMg.setKsContent(ksContentList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(20)&&20<len){
+                        List<String> dyList = new ArrayList<>();
+                        dyList.add(valueOf(rowList.get(20)));
+                        consumerMg.setDy(dyList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(21)&&21<len){
+                        List<String> yContentList = new ArrayList<>();
+                        yContentList.add(valueOf(rowList.get(21)));
+                        consumerMg.setDyContent(yContentList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+
+                try {
+                    if (null!=rowList.get(22)&&22<len){
+                        List<String> pddList = new ArrayList<>();
+                        pddList.add(valueOf(rowList.get(22)));
+                        consumerMg.setPdd(pddList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(23)&&23<len){
+                        List<String> pddContentList = new ArrayList<>();
+                        pddContentList.add(valueOf(rowList.get(23)));
+                        consumerMg.setPddContent(pddContentList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+
+                try {
+                    if (null!=rowList.get(24)&&24<len){
+                        List<String> qqList = new ArrayList<>();
+                        qqList.add(valueOf(rowList.get(24)));
+                        consumerMg.setQq(qqList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(25)&&25<len){
+                        List<String> qqContentList = new ArrayList<>();
+                        qqContentList.add(valueOf(rowList.get(25)));
+                        consumerMg.setQqContent(qqContentList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(26)&&26<len){
+                        List<String> tbwwList = new ArrayList<>();
+                        tbwwList.add(valueOf(rowList.get(26)));
+                        consumerMg.setTbww(tbwwList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(27)&&27<len){
+                        List<String> tbwwContentList = new ArrayList<>();
+                        tbwwContentList.add(valueOf(rowList.get(27)));
+                        consumerMg.setTbwwContent(tbwwContentList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(28)&&28<len){
+                        List<String> emailList = new ArrayList<>();
+                        emailList.add(valueOf(rowList.get(28)));
+                        consumerMg.setEmail(emailList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+
+                try {
+                    if (null!=rowList.get(29)&&29<len){
+                        List<String> baiduList = new ArrayList<>();
+                        baiduList.add(valueOf(rowList.get(29)));
+                        consumerMg.setBaidu(baiduList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(30)&&30<len){
+
+                        List<String> baiduContentList = new ArrayList<>();
+                        baiduContentList.add(valueOf(rowList.get(30)));
+                        consumerMg.setBaiduContent(baiduContentList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+
+                try {
+                    if (null!=rowList.get(31)&&31<len){
+                        List<String> indexPageList = new ArrayList<>();
+                        indexPageList.add(valueOf(rowList.get(31)));
+                        consumerMg.setIndexPage(indexPageList);
+                    }
+                } catch (Exception e) {
+
+                }
+                try {
+                    if (null!=rowList.get(32)&&32<len){
+                        List<String> remarkList = new ArrayList<>();
+                        remarkList.add(valueOf(rowList.get(32)));
+                        consumerMg.setRemark(remarkList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(33)&&33<len){
+                        List<String> connectList = new ArrayList<>();
+                        connectList.add(valueOf(rowList.get(33)));
+                        consumerMg.setConnectList(connectList);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(34)&&34<len){
+                        consumerMg.setProvince(valueOf(rowList.get(34)));
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(35)&&35<len){
+                        consumerMg.setCity(valueOf(rowList.get(35)));
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(36)&&36<len){
+                        consumerMg.setArea(valueOf(rowList.get(36)));
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(37)&&37<len){
+                        consumerMg.setVillage(valueOf(rowList.get(37)));
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(38)&&38<len){
+                        List<String> lgistialAddress = new ArrayList<>();
+                        lgistialAddress.add(valueOf(rowList.get(38)));
+                        consumerMg.setLogistialAddress(lgistialAddress);
+                    }
+                } catch (Exception e) {
+
+                }
+                if (s){
+                    consumerMg.setGroup(userName);
+                }else {
+                    consumerMg.setGroup("");
+                }
+
+                try {
+                    if (null!=rowList.get(40)&&40<len){
+                        List<String>  textList1 = new ArrayList<>();
+                        textList1.add(valueOf(rowList.get(40)));
+                        consumerMg.setText1(textList1);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(41)&&41<len){
+                        List<String>  textList2 = new ArrayList<>();
+                        textList2.add(valueOf(rowList.get(41)));
+                        consumerMg.setText2(textList2);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(42)&&42<len){
+                        List<String>  textList3 = new ArrayList<>();
+                        textList3.add(valueOf(rowList.get(42)));
+                        consumerMg.setText3(textList3);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(43)&&43<len){
+                        List<String>  textList4 = new ArrayList<>();
+                        textList4.add(valueOf(rowList.get(43)));
+                        consumerMg.setText4(textList4);
+                    }
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    if (null!=rowList.get(44)&&44<len){
+                        List<String>  textList5 = new ArrayList<>();
+                        textList5.add(valueOf(rowList.get(44)));
+                        consumerMg.setText5(textList5);
+                    }
+                } catch (Exception e) {
+
+                }
+                try {
+                    if (null!=rowList.get(45)&&45<len){
+                        List<String>  textList6 = new ArrayList<>();
+                        textList6.add(valueOf(rowList.get(45)));
+                        consumerMg.setText6(textList6);
+                    }
+                } catch (Exception e) {
+
+                }
+                consumerMgService.saveConsumerMg(consumerMg);
+            }else {
+                //追加
+                if (!b){
+                    try {
+                        if (null!=rowList.get(0)&&0<len){
+                            consumerMg.setLevel(valueOf(rowList.get(0)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(1)&&1<len){
+                            consumerMg.setIsNew(valueOf(rowList.get(1)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(2)&&2<len){
+                            consumerMg.setCType(valueOf(rowList.get(2)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(3)&&3<len){
+                            List<String> menuList = new ArrayList<>();
+                            menuList.addAll(consumerMg.getMenu());
+                            menuList.add(valueOf(rowList.get(3)));
+                            consumerMg.setMenu(menuList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(4)&&4<len){
+                            List<String> companyList = new ArrayList<>();
+                            companyList.addAll(consumerMg.getCompany());
+                            companyList.add(valueOf(rowList.get(4)));
+                            consumerMg.setCompany(companyList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(5)&&5<len){
+                            List<String> cNameList = new ArrayList<>();
+                            cNameList.addAll(consumerMg.getCName());
+                            cNameList.add(valueOf(rowList.get(5)));
+                            consumerMg.setCName(cNameList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(6)&&6<len){
+                            consumerMg.setPhone(valueOf(rowList.get(6)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(7)&&7<len){
+                            List<String> productList = new ArrayList<>();
+                            productList.addAll(consumerMg.getProduct());
+                            productList.add(valueOf(rowList.get(7)));
+                            consumerMg.setProduct(productList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(8)&&8<len){
+                            List<String> imgUrlList = new ArrayList<>();
+                            imgUrlList.addAll(consumerMg.getImgUrl());
+                            imgUrlList.add(valueOf(rowList.get(8)));
+                            consumerMg.setImgUrl(imgUrlList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(9)&&9<len){
+                            List<String> videoUrlList = new ArrayList<>();
+                            videoUrlList.addAll(consumerMg.getVideoUrl());
+                            videoUrlList.add(valueOf(rowList.get(9)));
+                            consumerMg.setVideoUrl(videoUrlList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(10)&&10<len){
+                            List<String> salesmanList = new ArrayList<>();
+                            salesmanList.addAll(consumerMg.getSalesman());
+                            salesmanList.add(valueOf(rowList.get(10)));
+                            consumerMg.setSalesman(salesmanList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(11)&&11<len){
+                            List<String> wxNickList = new ArrayList<>();
+                            wxNickList.addAll(consumerMg.getWxNick());
+                            wxNickList.add(valueOf(rowList.get(11)));
+                            consumerMg.setWxNick(wxNickList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(12)&&12<len){
+                            List<String> wxPhoneList = new ArrayList<>();
+                            wxPhoneList.addAll(consumerMg.getWxPhone());
+                            wxPhoneList.add(valueOf(rowList.get(12)));
+                            consumerMg.setWxPhone(wxPhoneList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(13)&&13<len){
+                            List<String> addressList = new ArrayList<>();
+                            addressList.addAll(consumerMg.getAddress());
+                            addressList.add(valueOf(rowList.get(13)));
+                            consumerMg.setAddress(addressList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(14)&&14<len){
+                            List<String> phone2List = new ArrayList<>();
+                            phone2List.addAll(consumerMg.getPhone2());
+                            phone2List.add(valueOf(rowList.get(14)));
+                            consumerMg.setPhone2(phone2List);
+
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(15)&&15<len){
+                            List<String> salesList = new ArrayList<>();
+                            salesList.addAll(consumerMg.getSalesList());
+                            salesList.add(valueOf(rowList.get(15)));
+                            consumerMg.setSalesList(salesList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(16)&&16<len){
+                            List<String> promiseList = new ArrayList<>();
+                            promiseList.addAll(consumerMg.getPromise());
+                            promiseList.add(valueOf(rowList.get(16)));
+                            consumerMg.setPromise(promiseList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(17)&&17<len){
+                            List<String> phoneContentList = new ArrayList<>();
+                            phoneContentList.addAll(consumerMg.getPhoneContent());
+                            phoneContentList.add(valueOf(rowList.get(17)));
+                            consumerMg.setPhoneContent(phoneContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(18)&&18<len){
+                            List<String> ksList = new ArrayList<>();
+                            ksList.addAll(consumerMg.getKs());
+                            ksList.add(valueOf(rowList.get(18)));
+                            consumerMg.setKs(ksList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(19)&&19<len){
+                            List<String> ksContentList = new ArrayList<>();
+                            ksContentList.addAll(consumerMg.getKsContent());
+                            ksContentList.add(valueOf(rowList.get(19)));
+                            consumerMg.setKsContent(ksContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(20)&&20<len){
+                            List<String> dyList = new ArrayList<>();
+                            dyList.addAll(consumerMg.getDy());
+                            dyList.add(valueOf(rowList.get(20)));
+                            consumerMg.setDy(dyList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(21)&&21<len){
+                            List<String> yContentList = new ArrayList<>();
+                            yContentList.addAll(consumerMg.getDyContent());
+                            yContentList.add(valueOf(rowList.get(21)));
+                            consumerMg.setDyContent(yContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(22)&&22<len){
+                            List<String> pddList = new ArrayList<>();
+                            pddList.addAll(consumerMg.getPdd());
+                            pddList.add(valueOf(rowList.get(22)));
+                            consumerMg.setPdd(pddList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(23)&&23<len){
+                            List<String> pddContentList = new ArrayList<>();
+                            pddContentList.addAll(consumerMg.getPdd());
+                            pddContentList.add(valueOf(rowList.get(23)));
+                            consumerMg.setPddContent(pddContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(24)&&24<len){
+                            List<String> qqList = new ArrayList<>();
+                            qqList.addAll(consumerMg.getQq());
+                            qqList.add(valueOf(rowList.get(24)));
+                            consumerMg.setQq(qqList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(25)&&25<len){
+                            List<String> qqContentList = new ArrayList<>();
+                            qqContentList.addAll(consumerMg.getQqContent());
+                            qqContentList.add(valueOf(rowList.get(25)));
+                            consumerMg.setQqContent(qqContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(26)&&26<len){
+                            List<String> tbwwList = new ArrayList<>();
+                            tbwwList.addAll(consumerMg.getTbww());
+                            tbwwList.add(valueOf(rowList.get(26)));
+                            consumerMg.setTbww(tbwwList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(27)&&27<len){
+                            List<String> tbwwContentList = new ArrayList<>();
+                            tbwwContentList.addAll(consumerMg.getTbwwContent());
+                            tbwwContentList.add(valueOf(rowList.get(27)));
+                            consumerMg.setTbwwContent(tbwwContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(28)&&28<len){
+                            List<String> emailList = new ArrayList<>();
+                            emailList.addAll(consumerMg.getEmail());
+                            emailList.add(valueOf(rowList.get(28)));
+                            consumerMg.setEmail(emailList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(29)&&29<len){
+                            List<String> baiduList = new ArrayList<>();
+                            baiduList.addAll(consumerMg.getBaidu());
+                            baiduList.add(valueOf(rowList.get(29)));
+                            consumerMg.setBaidu(baiduList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(30)&&30<len){
+                            List<String> baiduContentList = new ArrayList<>();
+                            baiduContentList.addAll(consumerMg.getBaiduContent());
+                            baiduContentList.add(valueOf(rowList.get(30)));
+                            consumerMg.setBaiduContent(baiduContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(31)&&31<len){
+                            List<String> indexPageList = new ArrayList<>();
+                            indexPageList.addAll(consumerMg.getIndexPage());
+                            indexPageList.add(valueOf(rowList.get(31)));
+                            consumerMg.setIndexPage(indexPageList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(32)&&32<len){
+                            List<String> remarkList = new ArrayList<>();
+                            remarkList.addAll(consumerMg.getRemark());
+                            remarkList.add(valueOf(rowList.get(32)));
+                            consumerMg.setRemark(remarkList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(33)&&33<len){
+                            List<String> connectList = new ArrayList<>();
+                            connectList.addAll(consumerMg.getConnectList());
+                            connectList.add(valueOf(rowList.get(33)));
+                            consumerMg.setConnectList(connectList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(34)&&34<len){
+                            consumerMg.setProvince(valueOf(rowList.get(34)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(35)&&35<len){
+                            consumerMg.setCity(valueOf(rowList.get(35)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(36)&&36<len){
+                            consumerMg.setArea(valueOf(rowList.get(36)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(37)&&37<len){
+                            consumerMg.setVillage(valueOf(rowList.get(37)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(38)&&38<len){
+                            List<String> lgistialAddress = new ArrayList<>();
+                            lgistialAddress.addAll(consumerMg.getLogistialAddress());
+                            lgistialAddress.add(valueOf(rowList.get(38)));
+                            consumerMg.setLogistialAddress(lgistialAddress);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    if (s){
+                        consumerMg.setGroup(userName);
+                    }else {
+                        consumerMg.setGroup("");
+                    }
+
+                    try {
+                        if (null!=rowList.get(40)&&40<len){
+                            List<String>  textList1 = new ArrayList<>();
+                            textList1.addAll(consumerMg.getText1());
+                            textList1.add(valueOf(rowList.get(40)));
+                            consumerMg.setText1(textList1);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(41)&&41<len){
+                            List<String>  textList2 = new ArrayList<>();
+                            textList2.addAll(consumerMg.getText2());
+                            textList2.add(valueOf(rowList.get(41)));
+                            consumerMg.setText2(textList2);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(42)&&42<len){
+                            List<String>  textList3 = new ArrayList<>();
+                            textList3.addAll(consumerMg.getText3());
+                            textList3.add(valueOf(rowList.get(42)));
+                            consumerMg.setText3(textList3);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(43)&&43<len){
+                            List<String>  textList4 = new ArrayList<>();
+                            textList4.addAll(consumerMg.getText4());
+                            textList4.add(valueOf(rowList.get(43)));
+                            consumerMg.setText4(textList4);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(44)&&44<len){
+                            List<String>  textList5 = new ArrayList<>();
+                            textList5.addAll(consumerMg.getText5());
+                            textList5.add(valueOf(rowList.get(44)));
+                            consumerMg.setText5(textList5);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(45)&&45<len){
+                            List<String>  textList6 = new ArrayList<>();
+                            textList6.addAll(consumerMg.getText6());
+                            textList6.add(valueOf(rowList.get(45)));
+                            consumerMg.setText6(textList6);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }else {
+                    consumerMg.setId(phone);
+                    try {
+                        if (0<len&&null!=rowList.get(0)){
+                            consumerMg.setLevel(valueOf(rowList.get(0)));
+                        }
+                    }catch (Exception e){
+
+                    }
+
+                    try {
+                        if (1<len&&null!=rowList.get(1)){
+                            consumerMg.setIsNew(valueOf(rowList.get(1)));
+                        }
+                    }catch (Exception e){   }
+
+                    try {
+                        if (null!=rowList.get(2)&&2<len){
+                            consumerMg.setCType(valueOf(rowList.get(2)));
+                        }
+                    }catch (Exception e){}
+
+                    try {
+                        if (null!=rowList.get(3)&&3<len){
+                            List<String> menuList = new ArrayList<>();
+                            menuList.add(valueOf(rowList.get(3)));
+                            consumerMg.setMenu(menuList);
+                        }
+                    }catch (Exception e){   }
+
+                    try {
+                        if (null!=rowList.get(4)&&4<len){
+                            List<String> companyList = new ArrayList<>();
+                            companyList.add(valueOf(rowList.get(4)));
+                            consumerMg.setCompany(companyList);
+                        }
+                    }catch (Exception e){}
+
+                    try {
+                        if (null!=rowList.get(5)&&5<len){
+                            List<String> cNameList = new ArrayList<>();
+                            cNameList.add(valueOf(rowList.get(5)));
+                            consumerMg.setCName(cNameList);
+                        }
+                    }catch (Exception e){}
+
+                    try {
+                        if (null!=rowList.get(6)&&6<len){
+                            consumerMg.setPhone(valueOf(rowList.get(6)));
+                        }
+                    }catch (Exception e){}
+
+                    try {
+                        if (null!=rowList.get(7)&&7<len){
+                            List<String> productList = new ArrayList<>();
+                            productList.add(valueOf(rowList.get(7)));
+                            consumerMg.setProduct(productList);
+                        }
+                    }catch (Exception e){
+
+                    }
+
+                    try {
+
+                        if (null!=rowList.get(8)&&8<len){
+                            List<String> imgUrlList = new ArrayList<>();
+                            imgUrlList.add(valueOf(rowList.get(8)));
+                            consumerMg.setImgUrl(imgUrlList);
+                        }
+                    }catch (Exception e){
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(9)&&9<len){
+
+                            List<String> videoUrlList = new ArrayList<>();
+                            videoUrlList.add(valueOf(rowList.get(9)));
+                            consumerMg.setVideoUrl(videoUrlList);
+                        }
+                    }catch (Exception e){
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(10)&&10<len){
+                            List<String> salesmanList = new ArrayList<>();
+                            salesmanList.add(valueOf(rowList.get(10)));
+                            consumerMg.setSalesman(salesmanList);
+                        }
+                    }catch (Exception e){
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(11)&&11<len){
+                            List<String> wxNickList = new ArrayList<>();
+                            wxNickList.add(valueOf(rowList.get(11)));
+                            consumerMg.setWxNick(wxNickList);
+                        }
+                    }catch (Exception e){
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(12)&&12<len){
+
+                            List<String> wxPhoneList = new ArrayList<>();
+                            wxPhoneList.add(valueOf(rowList.get(12)));
+                            consumerMg.setWxPhone(wxPhoneList);
+                        }
+                    }catch (Exception e){
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(13)&&13<len){
+                            List<String> addressList = new ArrayList<>();
+                            addressList.add(valueOf(rowList.get(13)));
+                            consumerMg.setAddress(addressList);
+                        }
+                    }catch (Exception e){
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(14)&&14<len){
+                            List<String> phone2List = new ArrayList<>();
+                            phone2List.add(valueOf(rowList.get(14)));
+                            consumerMg.setPhone2(phone2List);
+
+                        }
+                    }catch (Exception e){
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(15)&&15<len){
+                            List<String> salesList = new ArrayList<>();
+                            salesList.add(valueOf(rowList.get(15)));
+                            consumerMg.setSalesList(salesList);
+                        }
+                    }catch (Exception e){
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(16)&&16<len){
+                            List<String> promiseList = new ArrayList<>();
+                            promiseList.add(valueOf(rowList.get(16)));
+                            consumerMg.setPromise(promiseList);
+                        }
+                    }catch (Exception e){
+
+                    }
+                    try {
+                        if (null!=rowList.get(17)&&17<len){
+                            List<String> phoneContentList = new ArrayList<>();
+                            phoneContentList.add(valueOf(rowList.get(17)));
+                            consumerMg.setPhoneContent(phoneContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(18)&&18<len){
+                            List<String> ksList = new ArrayList<>();
+                            ksList.add(valueOf(rowList.get(18)));
+                            consumerMg.setKs(ksList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(19)&&19<len){
+                            List<String> ksContentList = new ArrayList<>();
+                            ksContentList.add(valueOf(rowList.get(19)));
+                            consumerMg.setKsContent(ksContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(20)&&20<len){
+                            List<String> dyList = new ArrayList<>();
+                            dyList.add(valueOf(rowList.get(20)));
+                            consumerMg.setDy(dyList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(21)&&21<len){
+                            List<String> yContentList = new ArrayList<>();
+                            yContentList.add(valueOf(rowList.get(21)));
+                            consumerMg.setDyContent(yContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+
+                    try {
+                        if (null!=rowList.get(22)&&22<len){
+                            List<String> pddList = new ArrayList<>();
+                            pddList.add(valueOf(rowList.get(22)));
+                            consumerMg.setPdd(pddList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(23)&&23<len){
+                            List<String> pddContentList = new ArrayList<>();
+                            pddContentList.add(valueOf(rowList.get(23)));
+                            consumerMg.setPddContent(pddContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+
+                    try {
+                        if (null!=rowList.get(24)&&24<len){
+                            List<String> qqList = new ArrayList<>();
+                            qqList.add(valueOf(rowList.get(24)));
+                            consumerMg.setQq(qqList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(25)&&25<len){
+                            List<String> qqContentList = new ArrayList<>();
+                            qqContentList.add(valueOf(rowList.get(25)));
+                            consumerMg.setQqContent(qqContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(26)&&26<len){
+                            List<String> tbwwList = new ArrayList<>();
+                            tbwwList.add(valueOf(rowList.get(26)));
+                            consumerMg.setTbww(tbwwList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(27)&&27<len){
+                            List<String> tbwwContentList = new ArrayList<>();
+                            tbwwContentList.add(valueOf(rowList.get(27)));
+                            consumerMg.setTbwwContent(tbwwContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(28)&&28<len){
+                            List<String> emailList = new ArrayList<>();
+                            emailList.add(valueOf(rowList.get(28)));
+                            consumerMg.setEmail(emailList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+
+                    try {
+                        if (null!=rowList.get(29)&&29<len){
+                            List<String> baiduList = new ArrayList<>();
+                            baiduList.add(valueOf(rowList.get(29)));
+                            consumerMg.setBaidu(baiduList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(30)&&30<len){
+
+                            List<String> baiduContentList = new ArrayList<>();
+                            baiduContentList.add(valueOf(rowList.get(30)));
+                            consumerMg.setBaiduContent(baiduContentList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+
+                    try {
+                        if (null!=rowList.get(31)&&31<len){
+                            List<String> indexPageList = new ArrayList<>();
+                            indexPageList.add(valueOf(rowList.get(31)));
+                            consumerMg.setIndexPage(indexPageList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(32)&&32<len){
+                            List<String> remarkList = new ArrayList<>();
+                            remarkList.add(valueOf(rowList.get(32)));
+                            consumerMg.setRemark(remarkList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(33)&&33<len){
+                            List<String> connectList = new ArrayList<>();
+                            connectList.add(valueOf(rowList.get(33)));
+                            consumerMg.setConnectList(connectList);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(34)&&34<len){
+                            consumerMg.setProvince(valueOf(rowList.get(34)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(35)&&35<len){
+                            consumerMg.setCity(valueOf(rowList.get(35)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(36)&&36<len){
+                            consumerMg.setArea(valueOf(rowList.get(36)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(37)&&37<len){
+                            consumerMg.setVillage(valueOf(rowList.get(37)));
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(38)&&38<len){
+                            List<String> lgistialAddress = new ArrayList<>();
+                            lgistialAddress.add(valueOf(rowList.get(38)));
+                            consumerMg.setLogistialAddress(lgistialAddress);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    if (s){
+                        consumerMg.setGroup(userName);
+                    }else {
+                        consumerMg.setGroup("");
+                    }
+
+                    try {
+                        if (null!=rowList.get(40)&&40<len){
+                            List<String>  textList1 = new ArrayList<>();
+                            textList1.add(valueOf(rowList.get(40)));
+                            consumerMg.setText1(textList1);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(41)&&41<len){
+                            List<String>  textList2 = new ArrayList<>();
+                            textList2.add(valueOf(rowList.get(41)));
+                            consumerMg.setText2(textList2);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(42)&&42<len){
+                            List<String>  textList3 = new ArrayList<>();
+                            textList3.add(valueOf(rowList.get(42)));
+                            consumerMg.setText3(textList3);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(43)&&43<len){
+                            List<String>  textList4 = new ArrayList<>();
+                            textList4.add(valueOf(rowList.get(43)));
+                            consumerMg.setText4(textList4);
+                        }
+                    } catch (Exception e) {
+
+                    }
+
+                    try {
+                        if (null!=rowList.get(44)&&44<len){
+                            List<String>  textList5 = new ArrayList<>();
+                            textList5.add(valueOf(rowList.get(44)));
+                            consumerMg.setText5(textList5);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        if (null!=rowList.get(45)&&45<len){
+                            List<String>  textList6 = new ArrayList<>();
+                            textList6.add(valueOf(rowList.get(45)));
+                            consumerMg.setText6(textList6);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+                consumerMgService.saveConsumerMg(consumerMg);
+            }
+        }
+        return Result.of(null);
+    }
     @Transactional(rollbackFor = Exception.class)
     @RequestMapping("/upload")
     public Result upload(
@@ -491,7 +2284,11 @@ public class consumerController {
         }
     }
 
-
+    @GetMapping("findById")
+    public Result findById(@RequestParam("id")String id){
+        ConsumerMg consumerMg = consumerMgService.findConsumerMgById(id);
+        return Result.of(consumerMg);
+    }
     @GetMapping("findImgUrl")
     public Result findImgUrl(@RequestParam("phone")String phone) throws UnknownHostException {
        String url = "http://"+"222.174.180.94" +":"+"8888/file/getImg/";
@@ -500,6 +2297,9 @@ public class consumerController {
 //        String path = "/Volumes/SD/myfiles/";
         File file = new File(filepath);
         File[] files = file.listFiles();
+        if (files==null){
+            return Result.of(null);
+        }
         for (File f : files) {
             if (!f.isDirectory()){
                 System.out.println(f.getName());

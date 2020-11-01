@@ -39,7 +39,6 @@ captcha:
 ##### dev 配置 #######
 spring:
   profiles: dev
-
   #数据库配置
   datasource:
     url: jdbc:mysql://localhost:3306/base_admin?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
@@ -52,6 +51,12 @@ spring:
     mode: LEGACYHTML5
     servlet:
       content-type: text/html
+  data:
+    mongodb:
+#      uri: mongodb://localhost:27017/test
+      database: db1
+      host: 222.174.180.94
+      port: 27017
 
 #是否需要输入验证码
 captcha:

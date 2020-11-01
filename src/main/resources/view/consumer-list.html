@@ -390,11 +390,11 @@
                     inactive-text="追加">
 
             </el-switch>
-
+<!--            action="http://222.174.180.94:8888/upLoadData"-->
             <el-upload
                     class="upload-demo"
                     ref="upload"
-                    action="http://222.174.180.94:8888/upload"
+                    action="http://222.174.180.94:8888/upLoadData"
                     :data="{tag:`${uploadTag}`,share:`${share}`}"
                     name="multipartFile"
                     :on-preview="handlePreview"
@@ -432,7 +432,7 @@
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="新旧">
-                            <el-input v-model="updateObj.isNew"></el-input>
+                            <el-input v-model="updateObj.isNew" @input="textFormatter($event.target)"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -446,17 +446,17 @@
                 <el-row :gutter="20">
                     <el-col :span="8">
                         <el-form-item label="目录">
-                            <el-input v-model="updateObj.menu"></el-input>
+                            <el-input type="textarea" v-model="updateObj.menu"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="姓名">
-                            <el-input v-model="updateObj.cname"></el-input>
+                            <el-input  type="textarea" v-model="updateObj.cname"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="手机">
-                            <el-input v-model="updateObj.phone"></el-input>
+                            <el-input  v-model="updateObj.phone"></el-input>
                         </el-form-item>
                     </el-col>
 
@@ -465,24 +465,24 @@
                 <el-row :gutter="20">
                     <el-col :span="24">
                         <el-form-item label="公司">
-                            <el-input v-model="updateObj.company"></el-input>
+                            <el-input type="textarea" v-model="updateObj.company"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="8">
                         <el-form-item label="产品">
-                            <el-input v-model="updateObj.product"></el-input>
+                            <el-input type="textarea" v-model="updateObj.product"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="业务员">
-                            <el-input v-model="updateObj.salesman"></el-input>
+                            <el-input type="textarea" v-model="updateObj.salesman"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="微信昵称">
-                            <el-input v-model="updateObj.wxNick"></el-input>
+                            <el-input type="textarea" v-model="updateObj.wxNick"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -490,17 +490,17 @@
                 <el-row :gutter="20">
                     <el-col :span="8">
                         <el-form-item label="存在手机">
-                            <el-input v-model="updateObj.wxPhone"></el-input>
+                            <el-input type="textarea" v-model="updateObj.wxPhone"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="地址">
-                            <el-input v-model="updateObj.address"></el-input>
+                            <el-input type="textarea" v-model="updateObj.address"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="更多电话">
-                            <el-input v-model="updateObj.phone2"></el-input>
+                            <el-input type="textarea" v-model="updateObj.phone2"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -508,17 +508,17 @@
                 <el-row :gutter="20">
                     <el-col :span="8">
                         <el-form-item label="曾用物流">
-                            <el-input v-model="updateObj.logistialAddress"></el-input>
+                            <el-input type="textarea" v-model="updateObj.logistialAddress"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="信用评估">
-                            <el-input v-model="updateObj.promise"></el-input>
+                            <el-input type="textarea" v-model="updateObj.promise"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="邮箱">
-                            <el-input v-model="updateObj.email"></el-input>
+                            <el-input  type="textarea"v-model="updateObj.email"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -528,17 +528,17 @@
                 <el-row :gutter="20">
                     <el-col :span="8">
                         <el-form-item label="主页">
-                            <el-input v-model="updateObj.indexPage"></el-input>
+                            <el-input type="textarea" v-model="updateObj.indexPage"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="省份">
-                            <el-input v-model="updateObj.province"></el-input>
+                            <el-input type="textarea" v-model="updateObj.province"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="城市">
-                            <el-input v-model="updateObj.city"></el-input>
+                            <el-input type="textarea" v-model="updateObj.city"></el-input>
                         </el-form-item>
                     </el-col>
 
@@ -547,17 +547,17 @@
                 <el-row :gutter="20">
                     <el-col :span="8">
                         <el-form-item label="县市">
-                            <el-input v-model="updateObj.area"></el-input>
+                            <el-input type="textarea" v-model="updateObj.area"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="分组">
-                            <el-input v-model="updateObj.group"></el-input>
+                            <el-input  v-model="updateObj.group"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="备用1">
-                            <el-input v-model="updateObj.text1"></el-input>
+                            <el-input type="textarea" v-model="updateObj.text1"></el-input>
                         </el-form-item>
                     </el-col>
 
@@ -566,17 +566,17 @@
                 <el-row :gutter="20">
                     <el-col :span="8">
                         <el-form-item label="备用2">
-                            <el-input v-model="updateObj.text2"></el-input>
+                            <el-input type="textarea" v-model="updateObj.text2"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="备用3">
-                            <el-input v-model="updateObj.text3"></el-input>
+                            <el-input type="textarea" v-model="updateObj.text3"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="备用4">
-                            <el-input v-model="updateObj.text4"></el-input>
+                            <el-input type="textarea" v-model="updateObj.text4"></el-input>
                         </el-form-item>
                     </el-col>
 
@@ -586,7 +586,7 @@
                 <el-row :gutter="20">
                     <el-col :span="24">
                         <el-form-item label="街道">
-                            <el-input v-model="updateObj.country"></el-input>
+                            <el-input type="textarea" v-model="updateObj.country"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -594,12 +594,12 @@
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="快手">
-                            <el-input v-model="updateObj.ks"></el-input>
+                            <el-input type="textarea" v-model="updateObj.ks"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="快手内容">
-                            <el-input v-model="updateObj.ksContent"></el-input>
+                            <el-input type="textarea" v-model="updateObj.ksContent"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -607,12 +607,12 @@
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="抖音">
-                            <el-input v-model="updateObj.dy"></el-input>
+                            <el-input type="textarea" v-model="updateObj.dy"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="抖音内容">
-                            <el-input v-model="updateObj.dyContent"></el-input>
+                            <el-input type="textarea" v-model="updateObj.dyContent"></el-input>
                         </el-form-item>
                     </el-col>
 
@@ -621,12 +621,12 @@
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="拼多多">
-                            <el-input v-model="updateObj.pdd"></el-input>
+                            <el-input type="textarea" v-model="updateObj.pdd"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="拼多多内容">
-                            <el-input v-model="updateObj.pddContent"></el-input>
+                            <el-input type="textarea" v-model="updateObj.pddContent"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -634,24 +634,24 @@
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="QQ">
-                            <el-input v-model="updateObj.qq"></el-input>
+                            <el-input type="textarea" v-model="updateObj.qq"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="QQ内容">
-                            <el-input v-model="updateObj.qqContent"></el-input>
+                            <el-input type="textarea" v-model="updateObj.qqContent"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="淘宝旺旺">
-                            <el-input v-model="updateObj.tbww"></el-input>
+                            <el-input type="textarea" v-model="updateObj.tbww"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="淘宝旺旺内容">
-                            <el-input v-model="updateObj.tbwwContent"></el-input>
+                            <el-input type="textarea" v-model="updateObj.tbwwContent"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -659,12 +659,12 @@
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="百度">
-                            <el-input v-model="updateObj.baidu"></el-input>
+                            <el-input type="textarea" v-model="updateObj.baidu"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="百度内容">
-                            <el-input v-model="updateObj.baiduContent"></el-input>
+                            <el-input type="textarea" v-model="updateObj.baiduContent"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -739,6 +739,7 @@
                 prop="address"
                 label="地址"
                 :show-overflow-tooltip="true"
+                :formatter="formatter"
                 width="180"
         >
         </el-table-column>
@@ -746,6 +747,7 @@
                 prop="menu"
                 label="目录"
                 :show-overflow-tooltip="true"
+                :formatter="formatter"
                 width="80"
         >
         </el-table-column>
@@ -753,12 +755,14 @@
                 prop="company"
                 label="公司"
                 :show-overflow-tooltip="true"
+                :formatter="formatter"
                 width="100"
         >
         </el-table-column>
         <el-table-column
                 prop="phone"
                 label="手机"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -767,6 +771,7 @@
         <el-table-column
                 prop="product"
                 label="产品"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="180"
         >
@@ -775,14 +780,24 @@
 
         <el-table-column
                 prop="salesman"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 label="业务员"
                 width="100"
         >
         </el-table-column>
         <el-table-column
+                prop="cname"
+                :formatter="formatter"
+                :show-overflow-tooltip="true"
+                label="姓名"
+                width="100"
+        >
+        </el-table-column>
+        <el-table-column
                 prop="wxNick"
                 label="微信昵称"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -790,22 +805,19 @@
         <el-table-column
                 prop="wxPhone"
                 label="存在手机"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
         </el-table-column>
 
 
-        <el-table-column
-                prop="address"
-                label="地址"
-                :show-overflow-tooltip="true"
-                width="100"
-        >
+
         </el-table-column>
         <el-table-column
                 prop="wxNick"
                 label="微信"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -813,6 +825,7 @@
         <el-table-column
                 prop="wxPhone"
                 label="存在手机"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -820,6 +833,7 @@
         <el-table-column
                 prop="phone2"
                 label="更多电话"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -827,6 +841,7 @@
         <el-table-column
                 prop="salesList"
                 label="销售记录"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -834,6 +849,7 @@
         <el-table-column
                 prop="promise"
                 label="信用评估"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -842,6 +858,7 @@
         <el-table-column
                 prop="phoneContent"
                 label="电话内容"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -849,6 +866,7 @@
         <el-table-column
                 prop="ks"
                 label="快手"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -856,6 +874,7 @@
         <el-table-column
                 prop="ksCoucent"
                 label="快手内容"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -863,6 +882,7 @@
         <el-table-column
                 prop="dy"
                 label="抖音"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -870,6 +890,7 @@
         <el-table-column
                 prop="dyCouncent"
                 label="抖音内容"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -877,6 +898,7 @@
         <el-table-column
                 prop="pdd"
                 label="拼多多"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -884,6 +906,7 @@
         <el-table-column
                 prop="pddContent"
                 label="拼多多内容"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -891,6 +914,7 @@
         <el-table-column
                 prop="qq"
                 label="QQ"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -898,6 +922,7 @@
         <el-table-column
                 prop="qqContent"
                 label="QQ内容"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -905,6 +930,7 @@
         <el-table-column
                 prop="tbww"
                 label="淘宝旺旺"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -912,6 +938,7 @@
         <el-table-column
                 prop="tbwwContent"
                 label="淘宝旺旺内容"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -919,6 +946,7 @@
         <el-table-column
                 prop="baidu"
                 label="百度"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -926,6 +954,7 @@
         <el-table-column
                 prop="baiduContent"
                 label="百度内容"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -933,6 +962,7 @@
         <el-table-column
                 prop="indexPage"
                 label="主页"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -940,6 +970,7 @@
         <el-table-column
                 prop="remark"
                 label="备注"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -947,6 +978,7 @@
         <el-table-column
                 prop="connectList"
                 label="沟通记录"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -954,6 +986,7 @@
         <el-table-column
                 prop="group"
                 label="所有人"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -961,6 +994,7 @@
         <el-table-column
                 prop="province"
                 label="省份"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -968,6 +1002,7 @@
         <el-table-column
                 prop="city"
                 label="地市"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -975,6 +1010,7 @@
         <el-table-column
                 prop="area"
                 label="县"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -982,6 +1018,7 @@
         <el-table-column
                 prop="area"
                 label="县"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -989,6 +1026,7 @@
         <el-table-column
                 prop="agency"
                 label="街道"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -996,6 +1034,7 @@
         <el-table-column
                 prop="logistialAddress"
                 label="曾用物流"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -1003,6 +1042,7 @@
          <el-table-column
                 prop="text1"
                 label="备用一"
+                :formatter="formatter"
                 :show-overflow-tooltip="true"
                 width="100"
         >
@@ -1010,6 +1050,7 @@
         <el-table-column
                         prop="text2"
                         label="备用二"
+                        :formatter="formatter"
                         :show-overflow-tooltip="true"
                         width="100"
                 >
@@ -1017,6 +1058,7 @@
         <el-table-column
                         prop="text3"
                         label="备用三"
+                        :formatter="formatter"
                         :show-overflow-tooltip="true"
                         width="100"
                 >
@@ -1024,6 +1066,7 @@
         <el-table-column
                         prop="text4"
                         label="备用四"
+                        :formatter="formatter"
                         :show-overflow-tooltip="true"
                         width="100"
                 >
@@ -1031,6 +1074,9 @@
         <el-table-column
                         prop="text5"
                         label="备用五"
+                        :formatter="formatter"
+
+
                         :show-overflow-tooltip="true"
                         width="100"
                 >
@@ -1048,7 +1094,6 @@
                 width="100">
             <template slot-scope="scope">
                 <el-button @click="handleClick(scope.row)" type="text" size="small">查询详细</el-button>
-
             </template>
         </el-table-column>
     </el-table>
@@ -1187,9 +1232,8 @@
                 share: true,
                 updateObj: {},
                 updateModal: false,
-                urls: [
-
-                ]
+                urls: [],
+                local: window.location.host
 
             }
 
@@ -1606,7 +1650,36 @@
                 t.findTableData();
             },handleClick(row){
                 let t  = this;
-                t.updateObj = row;
+                let params = {id:row.id};
+                axios
+                    .get('http://'+local+'/findById',{
+                        params:params
+                    })
+                    .then(function (response) {
+                        console.log(response.data.data)
+                        let data = response.data.data;
+                        let obj = {};
+                        for (let key in data) {
+                            let v = data[key];
+                            if (Array.isArray(v)){
+                                let arrValue = '';
+                                for (let i = 0; i < v.length; i++) {
+                                    if (v[i]!=''){
+                                        arrValue+=v[i]+'\n';
+                                    }
+                                }
+                                obj[key] = arrValue;
+                            }else {
+                                obj[key] = v;
+                            }
+                        }
+                        t.updateObj = obj;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+
                 axios.get('http://'+local+'/findImgUrl',{
                         params:{phone:row.phone}
                     })
@@ -1617,14 +1690,14 @@
                         console.log(error);
                     });
 
-
                 t.updateModal = true
             },
             saveUpdate(){
                 let t = this;
                 let data = t.updateObj;
+                console.log(data)
                 axios
-                    .get('http://'+local+'/update',{params:data},
+                    .get('http://'+local+'/updateConusmer',{params:data},
 
                     )
                     .then(function (response) {
@@ -1635,6 +1708,13 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+            },formatter(row, column, cellValue, index){
+                if (Array.isArray(cellValue)){
+                    return cellValue[cellValue.length-1];
+                }else {
+                    return cellValue;
+                }
+
             }
 
 
