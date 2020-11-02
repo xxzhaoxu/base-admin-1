@@ -73,6 +73,7 @@
             <div class="more">
                 <el-button type="primary" @click="findTableData">查询</el-button>
                 <el-button type="primary" class="uploadbt" @click="dialoguploadVisible = true">上传文件</el-button>
+                <el-button type="primary" class="exportData" @click="exprotData">导出数据</el-button>
                 <el-button type="primary" @click="dialogFormVisible = true">更多条件</el-button>
             </div>
         </el-form>
@@ -368,8 +369,9 @@
     <el-dialog
             title="上传文件"
             :visible.sync="dialoguploadVisible"
-            :close-on-press-escape='false'
-            :before-close="cancel"
+            :close-on-press-escape='true'
+            :close-on-click-modal="true"
+            @close="upFileMotail"
     >
         <el-form style="text-align: center;">
             <el-switch
@@ -397,13 +399,16 @@
                     action="http://222.174.180.94:8888/upLoadData"
                     :data="{tag:`${uploadTag}`,share:`${share}`}"
                     name="multipartFile"
+                    accept=".xls,.xlsx"
                     :on-preview="handlePreview"
                     :on-remove="handleRemove"
                     :file-list="fileList"
+                    :on-success="upssuccess"
+                    :on-error="uperror"
                     :auto-upload="false">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                 <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
+                <div slot="tip" class="el-upload__tip">只能上传EXCEL文件</div>
             </el-upload>
 
 
@@ -1107,7 +1112,9 @@
                 >
         </el-pagination>
     </div>
+
 </div>
+
 <style>
     /*.upload-demo{*/
     /*    display: flex;*/
@@ -1125,6 +1132,10 @@
     .uploadbt{
         position: absolute;
         left: 10px;
+    }
+    .exportData{
+        position: absolute;
+        left: 120px;
     }
     .cell{
         text-align: center;
@@ -1233,7 +1244,8 @@
                 updateObj: {},
                 updateModal: false,
                 urls: [],
-                local: window.location.host
+                local: window.location.host,
+
 
             }
 
@@ -1278,6 +1290,9 @@
                 t.country  ='';
                 t.logistialAddress = '';
                 t.cGroup = '';
+            },
+            closeUpFile(){
+
             },
             batchOperate(command) {
                 console.log(command)
@@ -1715,6 +1730,152 @@
                     return cellValue;
                 }
 
+            },upssuccess(response, file, fileList){
+                console.log(response)
+                let  t = this;
+                t.$refs.upload.clearFiles();
+                if (response.data===400){
+                    t.$message.error(response.msg);
+                }
+                if (response.data===200){
+                    t.$message({
+                        message: response.msg,
+                        type: 'success'
+                    });
+                }
+
+            },uperror(err, file, fileList){
+                this.$refs.upload.clearFiles();
+                this.$message.error(err);
+
+            },upFileMotail(){
+                this.$refs.upload.clearFiles();
+            },exprotData(){
+                let t = this;
+                let params = {};
+                params.pageIndex = t.pageIndex;
+                params.pageSize = 10;
+                if (t.phone!==''){
+                    params.phone = t.phone;
+                }
+                if (t.level!==''){
+                    params.level = t.level;
+                }
+                if (t.isNew!==''){
+                    params.isNew = t.isNew;
+                }
+                if (t.cType!==''){
+                    params.cType = t.cType;
+                }
+                if (t.menu!==''){
+                    params.menu = t.menu;
+                }
+                if (t.company!==''){
+                    params.company = t.company;
+                }
+                if (t.cName!==''){
+                    params.cName = t.cName;
+                }
+                if (t.product!==''){
+                    params.product =  t.product;
+                }
+                if (t.salesman!==''){
+                    params.salesman = t.salesman;
+                }
+                if (t.wxNick!==''){
+                    params.wxNick = t.wxNick;
+                }
+                if (t.wxPhone!==''){
+                    params.wxPhone = t.wxPhone;
+                }
+                if (t.address!==''){
+                    params.address = t.address;
+                }
+                if (t.phone2!==''){
+                    params.phone2 = t.phone2;
+                }
+                if (t.salesList!==null){
+                    params.salesList = t.salesList;
+                }
+                if (t.promise!==null){
+                    params.promise = t.promise;
+                }
+                if (t.phoneContent!==''){
+                    params.phoneContent = t.phoneContent;
+                }
+                if (t.ks!==''){
+                    params.ks = t.ks;
+                }
+                if (t.ksContent!==''){
+                    params.ksContent = t.ksContent;
+                }
+                if (t.dy!==''){
+                    params.dy = t.dy;
+                }
+                if (t.dyContent!==''){
+                    params.dyContent = t.dyContent;
+                }
+                if (t.pdd!==''){
+                    params.pdd = t.pdd;
+                }
+                if (t.pddContent!==''){
+                    params.pddContent = t.pddContent;
+                }
+                if (t.qq!==''){
+                    params.qq =  t.qq;
+                }
+                if (t.qqContent!==null){
+                    params.qqContent = t.qqContent;
+                }
+                if (t.tbww!==''){
+                    params.tbww = t.tbww;
+                }
+                if (t.tbwwContent!==''){
+                    params.tbwwContent = t.tbwwContent;
+                }
+                if (t.email!==''){
+                    params.email = t.email;
+                }
+                if (t.baidu!==''){
+                    params.baidu = t.baidu;
+                }
+                if (t.baiduContent!==''){
+                    params.baiduContent = t.baiduContent;
+                }
+                if (t.indexPage!==''){
+                    params.indexPage = t.indexPage;
+                }
+                if (t.remark!==''){
+                    params.remark = t.remark;
+                }
+                if (t.connectList!==''){
+                    params.connectList = t.connectList;
+                }
+                if (t.province!==''){
+                    params.province = t.province;
+                }
+                if (t.city!==''){
+                    params.city = t.city;
+                }
+                if (t.area!==''){
+                    params.area = t.area;
+                }
+                if (t.country!==''){
+                    params.country = t.country;
+                }
+                if (t.village!==''){
+                    params.village = t.village;
+                }
+                if (t.agency!==''){
+                    params.agency = t.agency;
+                }
+
+                // axios
+                //     .get('http://'+local+'/exprotData',{
+                //         params:params
+                //     })
+
+                window.open('http://'+local+'/exprotData');
             }
 
 

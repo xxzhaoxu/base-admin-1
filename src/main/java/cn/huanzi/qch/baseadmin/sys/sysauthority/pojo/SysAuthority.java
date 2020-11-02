@@ -22,4 +22,6 @@ public class SysAuthority implements Serializable {
 
     private Date updateTime;//修改时间
 
+    private String  upFile;//是否可以上传文件
+
 }

@@ -155,7 +155,7 @@ class IndexController {
 
         //后端公钥
         String publicKey = RsaUtil.getPublicKey();
-        log.info("后端公钥：" + publicKey);
+//        log.info("后端公钥：" + publicKey);
         modelAndView.addObject("publicKey", publicKey);
 
         return modelAndView;
