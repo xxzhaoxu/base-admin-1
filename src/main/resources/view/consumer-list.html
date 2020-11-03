@@ -427,6 +427,7 @@
     <el-dialog title="修改"
                :visible.sync="updateModal"
                width="100%"
+               @close="updateMotail"
     >
             <el-form   ref="form"   label-width="80px">
                 <el-row :gutter="20">
@@ -705,7 +706,18 @@
                 <el-row>
                     <el-col>
                         <div class="demo-image__lazy">
-                            <el-image v-for="url in urls" :key="url" :src="url" lazy></el-image>
+                            <el-image    v-for="url in urls" :key="url" :src="url" lazy></el-image>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col>
+                        <div class="demo-image__lazy">
+                            <div v-for="video in videos">
+                                <video  width="640" height="480" :src="video" controls="controls">
+                                    您的浏览器不支持播放视频
+                                </video>
+                            </div>
                         </div>
                     </el-col>
                 </el-row>
@@ -827,14 +839,7 @@
                 width="100"
         >
         </el-table-column>
-        <el-table-column
-                prop="wxPhone"
-                label="存在手机"
-                :formatter="formatter"
-                :show-overflow-tooltip="true"
-                width="100"
-        >
-        </el-table-column>
+
         <el-table-column
                 prop="phone2"
                 label="更多电话"
@@ -1140,6 +1145,9 @@
     .cell{
         text-align: center;
     }
+    .el-image__inner{
+        width: 640px;
+    }
 </style>
 <script>
     var local = window.location.host;
@@ -1205,7 +1213,7 @@
                 address:'',
                 phone2:'',
                 salesList:'',
-                promise:'',
+                promise: '',
                 phoneContent:'',
                 ks:'',
                 ksContent:'',
@@ -1244,6 +1252,7 @@
                 updateObj: {},
                 updateModal: false,
                 urls: [],
+                videos:[],
                 local: window.location.host,
 
 
@@ -1295,7 +1304,7 @@
 
             },
             batchOperate(command) {
-                console.log(command)
+                // console.log(command)
                 let t = this;
                 switch (command) {
                     case "salesman":
@@ -1520,10 +1529,10 @@
                 this.$refs.upload.submit();
             },
             handleRemove(file, fileList) {
-                console.log(file, fileList);
+                // console.log(file, fileList);
             },
             handlePreview(file) {
-                console.log(file);
+                // console.log(file);
             },findTableData(){
                 let t = this;
                 let params = {};
@@ -1648,7 +1657,7 @@
                         params:params
                     })
                     .then(function (response) {
-                        console.log(response.data)
+                        // console.log(response.data)
                         t.tableData = response.data.data.list;
                         t.total =response.data.data.count;
                     })
@@ -1671,7 +1680,7 @@
                         params:params
                     })
                     .then(function (response) {
-                        console.log(response.data.data)
+                        // console.log(response.data.data)
                         let data = response.data.data;
                         let obj = {};
                         for (let key in data) {
@@ -1699,7 +1708,9 @@
                         params:{phone:row.phone}
                     })
                     .then(function (response) {
-                        t.urls = response.data.data;
+                        // console.log(response)
+                        t.urls = response.data.data.imgList;
+                        t.videos = response.data.data.videoList;
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -1710,7 +1721,7 @@
             saveUpdate(){
                 let t = this;
                 let data = t.updateObj;
-                console.log(data)
+                // console.log(data)
                 axios
                     .get('http://'+local+'/updateConusmer',{params:data},
 
@@ -1731,7 +1742,7 @@
                 }
 
             },upssuccess(response, file, fileList){
-                console.log(response)
+                // console.log(response)
                 let  t = this;
                 t.$refs.upload.clearFiles();
                 if (response.data===400){
@@ -1752,133 +1763,147 @@
                 this.$refs.upload.clearFiles();
             },exprotData(){
                 let t = this;
-                let params = {};
-                params.pageIndex = t.pageIndex;
-                params.pageSize = 10;
+                let params = "?t="+Math.round(new Date() / 1000);
+
                 if (t.phone!==''){
-                    params.phone = t.phone;
+                    params +="&phone=" +t.phone;
                 }
                 if (t.level!==''){
-                    params.level = t.level;
+                    params +="&level="+ t.level;
                 }
                 if (t.isNew!==''){
-                    params.isNew = t.isNew;
+                    params+="&isNew=" + t.isNew;
                 }
                 if (t.cType!==''){
-                    params.cType = t.cType;
+                    params+="&cType" + t.cType;
                 }
                 if (t.menu!==''){
-                    params.menu = t.menu;
+                    params+= "&menu=" + t.menu;
                 }
                 if (t.company!==''){
-                    params.company = t.company;
+                    params+= "&company=" + t.company;
                 }
                 if (t.cName!==''){
-                    params.cName = t.cName;
+                    params+= "&cName=" +t.cName;
                 }
                 if (t.product!==''){
-                    params.product =  t.product;
+                    params += "&product="+  t.product;
                 }
                 if (t.salesman!==''){
-                    params.salesman = t.salesman;
+                    params+= "&salesman=" + t.salesman;
                 }
                 if (t.wxNick!==''){
-                    params.wxNick = t.wxNick;
+                    params+=" &wxNick="+ t.wxNick;
                 }
                 if (t.wxPhone!==''){
-                    params.wxPhone = t.wxPhone;
+                    params+= "&wxPhone=" +t.wxPhone;
                 }
                 if (t.address!==''){
-                    params.address = t.address;
+                    params+= "&address="+ t.address;
                 }
                 if (t.phone2!==''){
-                    params.phone2 = t.phone2;
+                    params+= "&phone2="+ t.phone2;
                 }
                 if (t.salesList!==null){
-                    params.salesList = t.salesList;
+                    params+= "&salesList="+ t.salesList;
                 }
                 if (t.promise!==null){
-                    params.promise = t.promise;
+                    params+= "&promise="+ t.promise;
                 }
                 if (t.phoneContent!==''){
-                    params.phoneContent = t.phoneContent;
+                    params+= "&phoneContent="+ t.phoneContent;
                 }
                 if (t.ks!==''){
-                    params.ks = t.ks;
+                    params+= "&ks="+ t.ks;
                 }
                 if (t.ksContent!==''){
-                    params.ksContent = t.ksContent;
+                    params+=  "&ksContent="+ t.ksContent;
                 }
                 if (t.dy!==''){
-                    params.dy = t.dy;
+                    params+= "&dy="+ t.dy;
                 }
                 if (t.dyContent!==''){
-                    params.dyContent = t.dyContent;
+                    params+= "&dyContent="+ t.dyContent;
                 }
                 if (t.pdd!==''){
-                    params.pdd = t.pdd;
+                    params+= "&pdd="+ t.pdd;
                 }
                 if (t.pddContent!==''){
-                    params.pddContent = t.pddContent;
+                    params+=  "&pddContent="+t.pddContent;
                 }
                 if (t.qq!==''){
-                    params.qq =  t.qq;
+                    params+= "&qq="+t.qq;
                 }
                 if (t.qqContent!==null){
-                    params.qqContent = t.qqContent;
+                    params+=" &qqContent="+ t.qqContent;
                 }
                 if (t.tbww!==''){
-                    params.tbww = t.tbww;
+                    params+=  "&tbww="+ t.tbww;
                 }
                 if (t.tbwwContent!==''){
-                    params.tbwwContent = t.tbwwContent;
+                    params+= "&tbwwContent="+ t.tbwwContent;
                 }
                 if (t.email!==''){
-                    params.email = t.email;
+                    params+=   "&email="+ t.email;
                 }
                 if (t.baidu!==''){
-                    params.baidu = t.baidu;
+                    params+=  "&baidu="+ t.baidu;
                 }
                 if (t.baiduContent!==''){
-                    params.baiduContent = t.baiduContent;
+                    params+= "&baiduContent="+ t.baiduContent;
                 }
                 if (t.indexPage!==''){
-                    params.indexPage = t.indexPage;
+                    params+=  "&indexPage="+ t.indexPage;
                 }
                 if (t.remark!==''){
-                    params.remark = t.remark;
+                    params+=  "&remark="+ t.remark;
                 }
                 if (t.connectList!==''){
-                    params.connectList = t.connectList;
+                    params+=  "&connectList="+ t.connectList;
                 }
                 if (t.province!==''){
-                    params.province = t.province;
+                    params+= "&province="+ t.province;
                 }
                 if (t.city!==''){
-                    params.city = t.city;
+                    params+= "&city="+ t.city;
                 }
                 if (t.area!==''){
-                    params.area = t.area;
+                    params+=  "&area="+ t.area;
                 }
                 if (t.country!==''){
-                    params.country = t.country;
+                    params+= "&country="+ t.country;
                 }
-                if (t.village!==''){
-                    params.village = t.village;
-                }
-                if (t.agency!==''){
-                    params.agency = t.agency;
-                }
+                // if (t.village!==''){
+                //     params+= "&village="+ t.village;
+                // }
+                // if (t.agency!==''){
+                //     params+=" &agency="+ t.agency;
+                // }
 
                 // axios
                 //     .get('http://'+local+'/exprotData',{
                 //         params:params
                 //     })
 
-                window.open('http://'+local+'/exprotData');
+                axios.get('http://'+local+'/allowDownFile').then(function (response) {
+                        console.log(response)
+                        if (response.data.data===400){
+                            t.$message.error(response.data.msg);
+                        }
+                        if(response.data.data===200){
+                            window.open('http://'+local+'/exprotData'+params);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+            },updateMotail(){
+                let  t = this;
+                t.urls = [];
+                t.videos = [];
+                // console.log("updateMotail")
             }
-
-
         }
     })
 </script>
