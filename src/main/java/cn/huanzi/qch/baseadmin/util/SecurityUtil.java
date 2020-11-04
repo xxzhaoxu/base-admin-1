@@ -17,7 +17,9 @@ public class SecurityUtil {
         User user = null;
         SecurityContext ctx = SecurityContextHolder.getContext();
         Authentication auth = ctx.getAuthentication();
-        if (auth.getPrincipal() instanceof UserDetails) user = (User) auth.getPrincipal();
+        if (auth.getPrincipal() instanceof UserDetails) {
+            user = (User) auth.getPrincipal();
+        }
         assert user != null;
         return user;
     }

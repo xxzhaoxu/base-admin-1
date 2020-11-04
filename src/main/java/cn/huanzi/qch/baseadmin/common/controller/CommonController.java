@@ -51,6 +51,7 @@ public class CommonController<V, E, T> {
     @Decrypt
     @Encrypt
     public Result<V> save(V entityVo) {
+        System.out.println(entityVo.toString());
         return commonService.save(entityVo);
     }
 

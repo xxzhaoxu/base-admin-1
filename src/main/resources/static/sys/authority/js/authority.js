@@ -27,6 +27,7 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate','tree', 'util'], funct
         //响应后数据处理
         , parseData: function (res) { //res 即为原始返回的数据
             var data = res.data;
+            console.log(data)
             return {
                 "flag": res.flag, //解析接口状态
                 "msg": res.msg, //解析提示文本
@@ -94,8 +95,11 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate','tree', 'util'], funct
         }
         //编辑
         else if (obj.event === 'edit') {
+            console.log(data)
             //回显操作表单
             $("#authorityForm").form(data);
+            let isFindAll = $("[name='isFindAll']");
+            console.log(isFindAll)
             form.render();
         }
     });
@@ -105,7 +109,12 @@ layui.use(['element', 'form', 'table', 'layer', 'laydate','tree', 'util'], funct
  * 提交保存
  */
 function authorityFormSave() {
+
     let authorityForm = $("#authorityForm").serializeObject();
+    if (authorityForm.authorityId===""){
+        alert("请选择角色")
+        return;
+    }
     console.log(authorityForm)
     $.post(ctx + "/sys/sysAuthority/save", authorityForm, function (data) {
         layer.msg("保存成功", {icon: 1,time: 2000}, function () {});

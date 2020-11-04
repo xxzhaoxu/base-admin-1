@@ -63,9 +63,20 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">允许上传文件</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="upFile" lay-skin="switch">
+                            <input type="radio" name="upFile" value="on" title="是">
+                            <input type="radio" name="upFile" value="off" title="否">
                         </div>
                     </div>
+
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">允许查询所有</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="isFindAll" value="on" title="是">
+                            <input type="radio" name="isFindAll" value="off" title="否">
+                        </div>
+                    </div>
+
 
                     <div class="layui-form-item">
                         <div class="layui-input-block">

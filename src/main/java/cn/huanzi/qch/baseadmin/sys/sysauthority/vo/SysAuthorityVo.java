@@ -20,4 +20,6 @@ public class SysAuthorityVo extends PageCondition implements Serializable {
 
     private String upFile; //是否可以上传文件
 
+    private String isFindAll; //是否可以查询全部
+
 }

@@ -14,4 +14,5 @@ public interface ConsumerMgService {
 
     JSONObject findConsumerMgByEntity(ConsumerMg consumerMg, Integer start, Integer end);
     List<ConsumerMg> findConsumerMgByEntity(ConsumerMg consumerMg);
+    void delete(String phone);
 }

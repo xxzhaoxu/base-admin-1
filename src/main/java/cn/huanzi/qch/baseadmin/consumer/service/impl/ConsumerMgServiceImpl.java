@@ -4,6 +4,9 @@ import cn.huanzi.qch.baseadmin.common.pojo.Result;
 import cn.huanzi.qch.baseadmin.consumer.entity.ConsumerMg;
 import cn.huanzi.qch.baseadmin.consumer.entity.UserEntity;
 import cn.huanzi.qch.baseadmin.consumer.service.ConsumerMgService;
+import cn.huanzi.qch.baseadmin.sys.sysauthority.pojo.SysAuthority;
+import cn.huanzi.qch.baseadmin.sys.sysauthority.repository.SysAuthorityRepository;
+import cn.huanzi.qch.baseadmin.util.SecurityUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.client.result.UpdateResult;
@@ -15,12 +18,15 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.springframework.util.Assert.*;
@@ -30,6 +36,8 @@ public class ConsumerMgServiceImpl implements ConsumerMgService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+    @Resource
+    private SysAuthorityRepository sysAuthorityRepository;
 
     @Override
     public ConsumerMg findConsumerMgByPhone(String phone) {
@@ -216,7 +224,20 @@ public class ConsumerMgServiceImpl implements ConsumerMgService {
             query.addCriteria(Criteria.where("logistialAddress").regex("^.*"+consumerMg.getLogistialAddress()+".*$"));
         }
         if (consumerMg.getGroup()!=null){
-            query.addCriteria(new Criteria().orOperator(Criteria.where("group").is(consumerMg.getGroup()),Criteria.where("group").is(null),Criteria.where("group").is("")));
+            //查询角色是否有查询全部权限
+            Collection<GrantedAuthority> collection = SecurityUtil.getLoginUser().getAuthorities();
+            boolean b = false;
+            for (GrantedAuthority grantedAuthority : collection) {
+                String c =   grantedAuthority.getAuthority();
+                SysAuthority sysAuthority =  sysAuthorityRepository.findAllByAuthorityName(c);
+                if (sysAuthority!=null&&sysAuthority.getIsFindAll()!=null&&sysAuthority.getIsFindAll().equals("on")){
+                    b= true;
+                    break;
+                }
+            }
+            if (!b){
+                query.addCriteria(new Criteria().orOperator(Criteria.where("group").is(consumerMg.getGroup()),Criteria.where("group").is(null),Criteria.where("group").is("")));
+            }
         }
         if (consumerMg.getText1()!=null){
             query.addCriteria(Criteria.where("text1").regex("^.*"+consumerMg.getText1()+".*$"));
@@ -362,7 +383,18 @@ public class ConsumerMgServiceImpl implements ConsumerMgService {
         if (consumerMg.getLogistialAddress()!=null){
             query.addCriteria(Criteria.where("logistialAddress").regex("^.*"+consumerMg.getLogistialAddress()+".*$"));
         }
-        if (consumerMg.getGroup()!=null){
+        //查询角色是否有查询全部权限
+        Collection<GrantedAuthority> collection = SecurityUtil.getLoginUser().getAuthorities();
+        boolean b = false;
+        for (GrantedAuthority grantedAuthority : collection) {
+            String c =   grantedAuthority.getAuthority();
+            SysAuthority sysAuthority =  sysAuthorityRepository.findAllByAuthorityName(c);
+            if (sysAuthority!=null&&sysAuthority.getIsFindAll()!=null&&sysAuthority.getIsFindAll().equals("on")){
+                b= true;
+                break;
+            }
+        }
+        if (!b){
             query.addCriteria(new Criteria().orOperator(Criteria.where("group").is(consumerMg.getGroup()),Criteria.where("group").is(null),Criteria.where("group").is("")));
         }
         if (consumerMg.getText1()!=null){
@@ -385,5 +417,11 @@ public class ConsumerMgServiceImpl implements ConsumerMgService {
         }
         List<ConsumerMg> consumerMgList = mongoTemplate.find(query,ConsumerMg.class);
         return consumerMgList;
+    }
+
+    @Override
+    public void delete(String phone) {
+        Query query=new Query(Criteria.where("id").is(phone));
+        mongoTemplate.remove(query,ConsumerMg.class);
     }
 }

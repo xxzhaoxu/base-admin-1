@@ -1104,6 +1104,7 @@
                 width="100">
             <template slot-scope="scope">
                 <el-button @click="handleClick(scope.row)" type="text" size="small">查询详细</el-button>
+                <el-button @click="deleteClick(scope.row)" type="text" size="small">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -1717,6 +1718,46 @@
                     });
 
                 t.updateModal = true
+            },deleteClick(row){
+                let t  = this;
+                let params = {id:row.id};
+                t.$confirm('删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios
+                        .get('http://'+local+'/deleteConsumer',{
+                            params:params
+                        })
+                        .then(function (response) {
+                            if (response.data.data===200){
+                                t.findTableData();
+                                t.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
+                            }else {
+                                t.$message({
+                                    type: 'info',
+                                    message: '删除失败'
+                                });
+                            }
+                        })
+                        .catch(function (error) {
+                            t.$message({
+                                type: 'info',
+                                message: '错误'
+                            });
+                        });
+
+                }).catch(() => {
+                    t.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+
             },
             saveUpdate(){
                 let t = this;

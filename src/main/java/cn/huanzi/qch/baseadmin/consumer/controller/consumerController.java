@@ -800,6 +800,7 @@ public class consumerController {
             textList6.add(text6);
             consumerMg.setText6(textList6);
         }
+
         String userName = SecurityUtil.getLoginUser().getUsername();
         consumerMg.setGroup(userName);
 
@@ -1232,7 +1233,7 @@ public class consumerController {
 
                 }
                 if (s){
-                    consumerMg.setGroup(userName);
+                    consumerMg.setGroup(valueOf(rowList.get(39)));
                 }else {
                     consumerMg.setGroup("");
                 }
@@ -1667,7 +1668,7 @@ public class consumerController {
 
                     }
                     if (s){
-                        consumerMg.setGroup(userName);
+                        consumerMg.setGroup(valueOf(rowList.get(39)));
                     }else {
                         consumerMg.setGroup("");
                     }
@@ -2102,7 +2103,7 @@ public class consumerController {
 
                     }
                     if (s){
-                        consumerMg.setGroup(userName);
+                        consumerMg.setGroup(valueOf(rowList.get(39)));
                     }else {
                         consumerMg.setGroup("");
                     }
@@ -2358,6 +2359,12 @@ public class consumerController {
         if (!upFile){
             return Result.of(400,false,"权限不足！");
         }
+        return Result.of(200);
+    }
+
+    @GetMapping("deleteConsumer")
+    public Result deleteConsumer(@RequestParam("id")String id){
+        consumerMgService.delete(id);
         return Result.of(200);
     }
     @GetMapping("exprotData")
@@ -2619,8 +2626,7 @@ public class consumerController {
             textList6.add(text6);
             consumerMg.setText6(textList6);
         }
-        String userName = SecurityUtil.getLoginUser().getUsername();
-        consumerMg.setGroup(userName);
+
 
         response.setHeader("content-type", "application/octet-stream");
         response.setContentType("application/vnd.ms-excel;charset=UTF-8");
