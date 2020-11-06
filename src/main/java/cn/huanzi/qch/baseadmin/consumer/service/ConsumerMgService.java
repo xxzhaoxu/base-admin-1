@@ -13,6 +13,9 @@ public interface ConsumerMgService {
     int updateConsumerMg(ConsumerMg consumerMg);
 
     JSONObject findConsumerMgByEntity(ConsumerMg consumerMg, Integer start, Integer end);
+    List<ConsumerMg> findConsumerMgByEntity(ConsumerMg consumerMg, Long start, Long end);
+
     List<ConsumerMg> findConsumerMgByEntity(ConsumerMg consumerMg);
+    Long findCount(ConsumerMg consumerMg);
     void delete(String phone);
 }

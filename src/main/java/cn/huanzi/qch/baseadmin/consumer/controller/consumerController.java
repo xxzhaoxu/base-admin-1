@@ -8,7 +8,9 @@ import cn.huanzi.qch.baseadmin.consumer.service.ConsumerMgService;
 import cn.huanzi.qch.baseadmin.sys.sysauthority.pojo.SysAuthority;
 import cn.huanzi.qch.baseadmin.sys.sysauthority.repository.SysAuthorityRepository;
 import cn.huanzi.qch.baseadmin.util.SecurityUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -22,6 +24,7 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -38,6 +41,7 @@ public class consumerController {
     private SysAuthorityRepository sysAuthorityRepository;
 
     String filepath = "D:/picture/";
+    String cachePath = "D:/cache/";
 //    String filepath = "E:\\File\\HTML5_yonghudenglu\\HTML5响应式用户登录界面模板\\css\\";
 
 
@@ -810,7 +814,7 @@ public class consumerController {
     @GetMapping("findList")
     public Result findList(@RequestParam(value = "pageIndex",defaultValue = "1")Integer pageIndex,
                            @RequestParam(value = "pageSize",defaultValue = "10")Integer pageSize
-                           ){
+    ){
 
         int start = (pageIndex-1)*pageSize;
         List<SysConsumer> page = sysConsumerRepository.findAllByParam(start,pageSize);
@@ -819,13 +823,13 @@ public class consumerController {
 
     @RequestMapping("upLoadData")
     public Result upLoadData(
-                                MultipartFile multipartFile,
-                               @RequestParam(value = "tag", defaultValue = "false") String tag,
-                               @RequestParam(value = "share",defaultValue = "false")String share){
+            MultipartFile multipartFile,
+            @RequestParam(value = "tag", defaultValue = "false") String tag,
+            @RequestParam(value = "share",defaultValue = "false")String share){
         System.out.println( multipartFile.getOriginalFilename());
         String fileName = multipartFile.getOriginalFilename();
         if (!(fileName.endsWith(".xls")||fileName.endsWith(".xlsx"))){
-                return Result.of(400,false,"只能上传EXCEL文件");
+            return Result.of(400,false,"只能上传EXCEL文件");
         }
         boolean b = Boolean.parseBoolean(tag);
         boolean s = Boolean.parseBoolean(share);
@@ -845,7 +849,7 @@ public class consumerController {
         Collection<GrantedAuthority> collection = SecurityUtil.getLoginUser().getAuthorities();
         for (GrantedAuthority grantedAuthority : collection) {
             String c =   grantedAuthority.getAuthority();
-           SysAuthority sysAuthority =  sysAuthorityRepository.findAllByAuthorityName(c);
+            SysAuthority sysAuthority =  sysAuthorityRepository.findAllByAuthorityName(c);
             if (sysAuthority!=null&&sysAuthority.getUpFile()!=null&&sysAuthority.getUpFile().equals("on")){
                 upFile = true;
                 break;
@@ -2178,7 +2182,7 @@ public class consumerController {
             MultipartFile multipartFile,
             @RequestParam(value = "tag", defaultValue = "false") String tag,
             @RequestParam(value = "share",defaultValue = "false")String share
-            ) throws IOException {
+    ) throws IOException {
 
         String userName = SecurityUtil.getLoginUser().getUsername();
         boolean b = Boolean.parseBoolean(tag);
@@ -2310,7 +2314,7 @@ public class consumerController {
     }
     @GetMapping("findImgUrl")
     public Result findImgUrl(@RequestParam("phone")String phone) throws IOException {
-       String url = "http://"+"222.174.180.94" +":"+"8888/file/getImg/";
+        String url = "http://"+"222.174.180.94" +":"+"8888/file/getImg/";
 //       String url = "http://"+"127.0.0.1" +":"+"8888/file/getImg/";
         List<String> reList = new ArrayList<>();
         List<String> vList = new ArrayList<>();
@@ -2413,8 +2417,11 @@ public class consumerController {
                              @RequestParam(required = false,name = "text4")String text4,
                              @RequestParam(required = false,name = "text5")String text5,
                              @RequestParam(required = false,name = "text6")String text6,
+                             @RequestParam(required = false,name = "t")Long t,
                              HttpServletResponse response
-                             ) throws IOException {
+    ) throws IOException {
+        Date date = new Date(t*1000);
+        String time = DateUtil.format(date, "yyyyMMddHHmmss");
         ConsumerMg consumerMg = new ConsumerMg();
         consumerMg.setLevel(level);
         consumerMg.setIsNew(isNew);
@@ -2630,193 +2637,211 @@ public class consumerController {
 
         response.setHeader("content-type", "application/octet-stream");
         response.setContentType("application/vnd.ms-excel;charset=UTF-8");
-        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(System.currentTimeMillis()+".xlsx", "UTF-8"));
 
-        List<ConsumerMg> consumerMgList =  consumerMgService.findConsumerMgByEntity(consumerMg);
-        List<List<Object>> excelList =new ArrayList<>();
-        List<Object> tmp;
-        List<Object> title = new ArrayList<Object>(){
-            {
-                add(0,"级别");
-                add(1,"级别");
-                add(2,"类别");
-                add(3,"目录");
-                add(4,"公司");
-                add(5,"姓名");
-                add(6,"手机");
-                add(7,"产品");
-                add(8,"图片");
-                add(9,"视频");
-                add(10,"业务员");
-                add(11,"微信昵称");
-                add(12,"存在手机");
-                add(13,"地址");
-                add(14,"更多电话");
-                add(15,"销售记录");
-                add(16,"信用评估");
-                add(17,"电话内容");
-                add(18,"快手");
-                add(19,"快手内容");
-                add(20,"抖音");
-                add(21,"抖音内容");
-                add(22,"拼多多");
-                add(23,"拼多多内容");
-                add(24,"qq");
-                add(25,"qq内容");
-                add(26,"淘宝旺旺");
-                add(27,"旺旺内容");
-                add(28,"邮箱");
-                add(29,"百度");
-                add(30,"百度内容");
-                add(31,"主页");
-                add(32,"备注");
-                add(33,"沟通记录");
-                add(34,"省份");
-                add(35,"地市");
-                add(36,"县市");
-                add(37,"街道");
-                add(38,"曾用物流");
-                add(39,"分组");
-                add(40,"备用一");
-                add(41,"备用二");
-                add(42,"备用三");
-                add(43,"备用四");
-                add(44,"备用五");
-                add(45,"备用六");
+
+
+        Long pageSize = 5000000L;
+        Long pageIndex = 0L;
+        List<ConsumerMg> consumerMgList ;
+        List<List<Object>> excelList = new ArrayList<>() ;
+        //循环分页查询
+        String savePath = cachePath+time+"/";
+        while (true){
+            consumerMgList = consumerMgService.findConsumerMgByEntity(consumerMg,  pageIndex,  pageSize);
+            //没有数据  立即结束循环
+            if (consumerMgList.size()==0){
+                break;
             }
-        };
+            List<Object> tmp;
+            List<Object> title = new ArrayList<Object>(){
+                {
+                    add(0,"级别");
+                    add(1,"级别");
+                    add(2,"类别");
+                    add(3,"目录");
+                    add(4,"公司");
+                    add(5,"姓名");
+                    add(6,"手机");
+                    add(7,"产品");
+                    add(8,"图片");
+                    add(9,"视频");
+                    add(10,"业务员");
+                    add(11,"微信昵称");
+                    add(12,"存在手机");
+                    add(13,"地址");
+                    add(14,"更多电话");
+                    add(15,"销售记录");
+                    add(16,"信用评估");
+                    add(17,"电话内容");
+                    add(18,"快手");
+                    add(19,"快手内容");
+                    add(20,"抖音");
+                    add(21,"抖音内容");
+                    add(22,"拼多多");
+                    add(23,"拼多多内容");
+                    add(24,"qq");
+                    add(25,"qq内容");
+                    add(26,"淘宝旺旺");
+                    add(27,"旺旺内容");
+                    add(28,"邮箱");
+                    add(29,"百度");
+                    add(30,"百度内容");
+                    add(31,"主页");
+                    add(32,"备注");
+                    add(33,"沟通记录");
+                    add(34,"省份");
+                    add(35,"地市");
+                    add(36,"县市");
+                    add(37,"街道");
+                    add(38,"曾用物流");
+                    add(39,"分组");
+                    add(40,"备用一");
+                    add(41,"备用二");
+                    add(42,"备用三");
+                    add(43,"备用四");
+                    add(44,"备用五");
+                    add(45,"备用六");
+                }
+            };
 
-        excelList.add(title);
-//        boolean t =false;
-        for (ConsumerMg mg : consumerMgList) {
-            tmp  = new ArrayList<>();
-            tmp.add(0,mg.getLevel());
-            tmp.add(1,mg.getIsNew());
-            tmp.add(2,mg.getCType());
-            tmp.add(3,formart(mg.getMenu()));
-            tmp.add(4,formart(mg.getCompany()));
-            tmp.add(5,formart(mg.getCName()));
-            tmp.add(6,mg.getPhone());
-            tmp.add(7,formart(mg.getProduct()));
-            tmp.add(8,formart(mg.getImgUrl()));
-            tmp.add(9,formart(mg.getVideoUrl()));
-            tmp.add(10,formart(mg.getSalesman()));
-            tmp.add(11,formart(mg.getWxNick()));
-            tmp.add(12,formart(mg.getWxPhone()));
-            tmp.add(13,formart(mg.getAddress()));
-            tmp.add(14,formart(mg.getPhone2()));
-            tmp.add(15,formart(mg.getSalesList()));
-            tmp.add(16,formart(mg.getPromise()));
-            tmp.add(17,formart(mg.getPhoneContent()));
-            tmp.add(18,formart(mg.getKs()));
-            tmp.add(19,formart(mg.getKsContent()));
-            tmp.add(20,formart(mg.getDy()));
-            tmp.add(21,formart(mg.getDyContent()));
-            tmp.add(22,formart(mg.getPdd()));
-            tmp.add(23,formart(mg.getPddContent()));
-            tmp.add(24,formart(mg.getQq()));
-            tmp.add(25,formart(mg.getQqContent()));
-            tmp.add(26,formart(mg.getTbww()));
-            tmp.add(27,formart(mg.getTbwwContent()));
-            tmp.add(28,formart(mg.getEmail()));
-            tmp.add(29,formart(mg.getBaidu()));
-            tmp.add(30,formart(mg.getBaiduContent()));
-            tmp.add(31,formart(mg.getIndexPage()));
-            tmp.add(32,formart(mg.getRemark()));
-            tmp.add(33,formart(mg.getConnectList()));
-            tmp.add(34,(mg.getProvince()));
-            tmp.add(35,mg.getCity());
-            tmp.add(36,mg.getArea());
-            tmp.add(37,mg.getCountry());
-            tmp.add(38,formart(mg.getLogistialAddress()));
-            tmp.add(39,mg.getGroup());
-            tmp.add(40,formart(mg.getText1()));
-            tmp.add(41,formart(mg.getText2()));
-            tmp.add(42,formart(mg.getText3()));
-            tmp.add(43,formart(mg.getText4()));
-            tmp.add(44,formart(mg.getText5()));
-            tmp.add(45,formart(mg.getText6()));
-//            try {
-//                Field[] field = mg.getClass().getDeclaredFields();
-//                for (Field f : field) {
-//                    f.setAccessible(true);
-//                    if (f.get(mg)==null){
-//                        continue;
-//                    }
-//                    System.err.println(f.getName());
-//                    StringBuffer stringBuffer = new StringBuffer();
-//                    //集合
-//                    if(f.getType() == java.util.List.class){
-//                        Class<?> clzz = f.get(mg).getClass();
-//                        Method sizeMethod = clzz.getDeclaredMethod("size");
-//                        if(!sizeMethod.isAccessible()){
-//                            sizeMethod.setAccessible(true);
-//                        }
-//                        //集合长度
-//                        int size = (int) sizeMethod.invoke(f.get(mg));
-//                        for (int i = 0; i < size; i++) {
-//                            //反射获取到list的get方法
-//                            Method getMethod = clzz.getDeclaredMethod("get", int.class);
-//                            //调用get方法获取数据
-//                            if(!getMethod.isAccessible()){
-//                                getMethod.setAccessible(true);
-//                            }
-//                            String str = (String) getMethod.invoke(f.get(mg), i);
-//                            if (StrUtil.isNotEmpty(str)){
-//                               stringBuffer.append(str).append("\n");
-//                            }
-//                        }
-//                        title.add(excelTitle.get(f.getName()));
-//                        tmp.add(stringBuffer);
-//
-//                    }else {
-//                        String value =  (String) f.get(mg);
-//                        if (StrUtil.isNotEmpty(value)){
-//                                title.add(excelTitle.get(f.getName()));
-//                                tmp.add(value);
-//                        }
-//                    }
-//
-//                }
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//            if (!t){
-//                t =  excelList.add(title);
-//            }
+            excelList.add(title);
+            for (ConsumerMg mg : consumerMgList) {
+                tmp  = new ArrayList<>();
+                tmp.add(0,mg.getLevel());
+                tmp.add(1,mg.getIsNew());
+                tmp.add(2,mg.getCType());
+                tmp.add(3,formart(mg.getMenu()));
+                tmp.add(4,formart(mg.getCompany()));
+                tmp.add(5,formart(mg.getCName()));
+                tmp.add(6,mg.getPhone());
+                tmp.add(7,formart(mg.getProduct()));
+                tmp.add(8,formart(mg.getImgUrl()));
+                tmp.add(9,formart(mg.getVideoUrl()));
+                tmp.add(10,formart(mg.getSalesman()));
+                tmp.add(11,formart(mg.getWxNick()));
+                tmp.add(12,formart(mg.getWxPhone()));
+                tmp.add(13,formart(mg.getAddress()));
+                tmp.add(14,formart(mg.getPhone2()));
+                tmp.add(15,formart(mg.getSalesList()));
+                tmp.add(16,formart(mg.getPromise()));
+                tmp.add(17,formart(mg.getPhoneContent()));
+                tmp.add(18,formart(mg.getKs()));
+                tmp.add(19,formart(mg.getKsContent()));
+                tmp.add(20,formart(mg.getDy()));
+                tmp.add(21,formart(mg.getDyContent()));
+                tmp.add(22,formart(mg.getPdd()));
+                tmp.add(23,formart(mg.getPddContent()));
+                tmp.add(24,formart(mg.getQq()));
+                tmp.add(25,formart(mg.getQqContent()));
+                tmp.add(26,formart(mg.getTbww()));
+                tmp.add(27,formart(mg.getTbwwContent()));
+                tmp.add(28,formart(mg.getEmail()));
+                tmp.add(29,formart(mg.getBaidu()));
+                tmp.add(30,formart(mg.getBaiduContent()));
+                tmp.add(31,formart(mg.getIndexPage()));
+                tmp.add(32,formart(mg.getRemark()));
+                tmp.add(33,formart(mg.getConnectList()));
+                tmp.add(34,(mg.getProvince()));
+                tmp.add(35,mg.getCity());
+                tmp.add(36,mg.getArea());
+                tmp.add(37,mg.getCountry());
+                tmp.add(38,formart(mg.getLogistialAddress()));
+                tmp.add(39,mg.getGroup());
+                tmp.add(40,formart(mg.getText1()));
+                tmp.add(41,formart(mg.getText2()));
+                tmp.add(42,formart(mg.getText3()));
+                tmp.add(43,formart(mg.getText4()));
+                tmp.add(44,formart(mg.getText5()));
+                tmp.add(45,formart(mg.getText6()));
+                excelList.add(tmp);
+            }
+            //创建带数据的excel
 
-            excelList.add(tmp);
+            createExcel(excelList,savePath,time+"-"+pageIndex);
+            pageIndex = pageIndex+1;
+            consumerMgList.clear();
+            excelList.clear();
         }
 
-        BigExcelWriter writer= new BigExcelWriter();
-        OutputStream outputStream = null;
+
+        File zip =  ZipUtil.zip(savePath);
+
+        InputStream inputStream = null;
+        InputStream fis = null;
+        OutputStream toClient = null;
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(zip.getName(), "UTF-8"));
         try {
-            outputStream =  response.getOutputStream();
+            inputStream = new FileInputStream(zip);
+            fis = new BufferedInputStream(inputStream);
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            toClient = new BufferedOutputStream(response.getOutputStream());
+            toClient.write(buffer);
         }catch (IOException e){
-            e.printStackTrace();
+            if (fis!=null){
+                fis.close();
+            }
+            if (toClient!=null){
+                toClient.flush();
+                toClient.close();
+            }
+        }finally {
+            if (fis!=null){
+                fis.close();
+            }
+            if (toClient!=null){
+                toClient.flush();
+                toClient.close();
+            }
         }
 
-        writer.write(excelList);
-        writer.flush(outputStream);
-        writer.close();
-        outputStream.close();
     }
     private static String valueOf(Object str){
-         if (str==null){
-             return "";
-         }
-         return String.valueOf(str);
+        if (str==null){
+            return "";
+        }
+        return String.valueOf(str);
     }
 
 
-   private String formart(List list){
+    private String formart(List list){
         if (list==null||list.size()==0){
             return "";
         }
         StringBuffer sb = new StringBuffer();
-       for (Object o : list) {
-           sb.append(o).append("\n");
-       }
+        for (Object o : list) {
+            if (o instanceof  String){
+                String str = String.valueOf(o);
+                 if (!StrUtil.isBlankIfStr(str)){
+                     sb.append(o).append("\n");
+                 }
+
+            }
+
+        }
         return sb.toString();
-   }
+    }
+
+    private void createExcel(List<List<Object>> list,String path,String index){
+        File file = new File(path);
+        if (!file.exists()){
+            file.mkdirs();
+        }
+        BigExcelWriter writer=null;
+        try {
+            writer = ExcelUtil.getBigWriter(path+index+".xlsx");
+            writer.write(list);
+        }catch (Exception e){
+            if (writer!=null){
+                writer.close();
+            }
+        }finally {
+            if (writer!=null){
+                writer.close();
+            }
+        }
+
+
+
+    }
 }
