@@ -864,7 +864,7 @@ public class consumerController {
             if ( rowList.get(6)==null){
                 continue;
             }
-            ConsumerMg consumerMg = consumerMgService.findConsumerMgByPhone(phone);
+            ConsumerMg consumerMg = consumerMgService.findConsumerMgById(phone);
             int len = rowList.size();
             if (consumerMg==null){
                 consumerMg = new ConsumerMg();
@@ -2640,7 +2640,7 @@ public class consumerController {
 
 
 
-        Long pageSize = 5000000L;
+        Long pageSize = 500000L;
         Long pageIndex = 0L;
         List<ConsumerMg> consumerMgList ;
         List<List<Object>> excelList = new ArrayList<>() ;

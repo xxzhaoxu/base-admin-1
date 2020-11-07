@@ -42,9 +42,7 @@ public class ConsumerMgServiceImpl implements ConsumerMgService {
 
     @Override
     public ConsumerMg findConsumerMgById(String id) {
-        Query query=new Query(Criteria.where("id").is(id));
-        ConsumerMg consumerMg =  mongoTemplate.findOne(query , ConsumerMg.class);
-        return consumerMg;
+        return  mongoTemplate.findById(id,ConsumerMg.class);
     }
 
     @Override
