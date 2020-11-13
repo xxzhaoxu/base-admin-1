@@ -42,9 +42,7 @@ public class ConsumerMgServiceImpl implements ConsumerMgService {
 
     @Override
     public ConsumerMg findConsumerMgById(String id) {
-        Query query=new Query(Criteria.where("id").is(id));
-        ConsumerMg consumerMg =  mongoTemplate.findOne(query , ConsumerMg.class);
-        return consumerMg;
+        return  mongoTemplate.findById(id,ConsumerMg.class);
     }
 
     @Override
@@ -161,25 +159,25 @@ public class ConsumerMgServiceImpl implements ConsumerMgService {
             query.addCriteria(Criteria.where("cType").regex("^.*"+consumerMg.getCType()+".*$"));
         }
         if (consumerMg.getMenu()!=null){
-            query.addCriteria(Criteria.where("menu").regex("^.*"+consumerMg.getMenu()+".*$"));
+            query.addCriteria(Criteria.where("menu").regex("^.*"+consumerMg.getMenu().get(0)+".*$"));
         }
         if (consumerMg.getCompany()!=null){
-            query.addCriteria(Criteria.where("company").regex("^.*"+consumerMg.getCompany()+".*$"));
+            query.addCriteria(Criteria.where("company").regex("^.*"+consumerMg.getCompany().get(0)+".*$"));
         }
         if (consumerMg.getCName()!=null){
-            query.addCriteria(Criteria.where("cName").regex("^.*"+consumerMg.getCName()+".*$"));
+            query.addCriteria(Criteria.where("cName").regex("^.*"+consumerMg.getCName().get(0)+".*$"));
         }
         if (consumerMg.getProduct()!=null){
-            query.addCriteria(Criteria.where("product").regex("^.*"+consumerMg.getProduct()+".*$"));
+            query.addCriteria(Criteria.where("product").regex("^.*"+consumerMg.getProduct().get(0)+".*$"));
         }
         if (consumerMg.getSalesman()!=null){
-            query.addCriteria(Criteria.where("salesman").regex("^.*"+consumerMg.getSalesman()+".*$"));
+            query.addCriteria(Criteria.where("salesman").regex("^.*"+consumerMg.getSalesman().get(0)+".*$"));
         }
         if (consumerMg.getWxNick()!=null){
-            query.addCriteria(Criteria.where("wxNick").regex("^.*"+consumerMg.getWxNick()+".*$"));
+            query.addCriteria(Criteria.where("wxNick").regex("^.*"+consumerMg.getWxNick().get(0)+".*$"));
         }
         if (consumerMg.getWxPhone()!=null){
-            query.addCriteria(Criteria.where("wxPhone").regex("^.*"+consumerMg.getWxPhone()+".*$"));
+            query.addCriteria(Criteria.where("wxPhone").regex("^.*"+consumerMg.getWxPhone().get(0)+".*$"));
         }
         if (consumerMg.getProvince()!=null){
             query.addCriteria(Criteria.where("province").regex("^.*"+consumerMg.getProvince()+".*$"));
@@ -194,70 +192,70 @@ public class ConsumerMgServiceImpl implements ConsumerMgService {
             query.addCriteria(Criteria.where("country").regex("^.*"+consumerMg.getCountry()+".*$"));
         }
         if (consumerMg.getPhone2()!=null){
-            query.addCriteria(Criteria.where("phone2").regex("^.*"+consumerMg.getPhone2()+".*$"));
+            query.addCriteria(Criteria.where("phone2").regex("^.*"+consumerMg.getPhone2().get(0)+".*$"));
         }
         if (consumerMg.getSalesList()!=null){
-            query.addCriteria(Criteria.where("salesList").regex("^.*"+consumerMg.getSalesList()+".*$"));
+            query.addCriteria(Criteria.where("salesList").regex("^.*"+consumerMg.getSalesList().get(0)+".*$"));
         }
         if (consumerMg.getPromise()!=null){
-            query.addCriteria(Criteria.where("promise").regex("^.*"+consumerMg.getPromise()+".*$"));
+            query.addCriteria(Criteria.where("promise").regex("^.*"+consumerMg.getPromise().get(0)+".*$"));
         }
         if (consumerMg.getPhoneContent()!=null){
-            query.addCriteria(Criteria.where("phoneContent").regex("^.*"+consumerMg.getPhoneContent()+".*$"));
+            query.addCriteria(Criteria.where("phoneContent").regex("^.*"+consumerMg.getPhoneContent().get(0)+".*$"));
         }
         if (consumerMg.getKs()!=null){
-            query.addCriteria(Criteria.where("ks").regex("^.*"+consumerMg.getKs()+".*$"));
+            query.addCriteria(Criteria.where("ks").regex("^.*"+consumerMg.getKs().get(0)+".*$"));
         }
         if (consumerMg.getKsContent()!=null){
-            query.addCriteria(Criteria.where("ksContent").regex("^.*"+consumerMg.getKsContent()+".*$"));
+            query.addCriteria(Criteria.where("ksContent").regex("^.*"+consumerMg.getKsContent().get(0)+".*$"));
         }
         if (consumerMg.getDy()!=null){
-            query.addCriteria(Criteria.where("dy").regex("^.*"+consumerMg.getDy()+".*$"));
+            query.addCriteria(Criteria.where("dy").regex("^.*"+consumerMg.getDy().get(0)+".*$"));
         }
         if (consumerMg.getDyContent()!=null){
-            query.addCriteria(Criteria.where("dyContent").regex("^.*"+consumerMg.getDyContent()+".*$"));
+            query.addCriteria(Criteria.where("dyContent").regex("^.*"+consumerMg.getDyContent().get(0)+".*$"));
         }
         if (consumerMg.getPdd()!=null){
-            query.addCriteria(Criteria.where("pdd").regex("^.*"+consumerMg.getPdd()+".*$"));
+            query.addCriteria(Criteria.where("pdd").regex("^.*"+consumerMg.getPdd().get(0)+".*$"));
         }
         if (consumerMg.getPddContent()!=null){
-            query.addCriteria(Criteria.where("pddContent").regex("^.*"+consumerMg.getPddContent()+".*$"));
+            query.addCriteria(Criteria.where("pddContent").regex("^.*"+consumerMg.getPddContent().get(0)+".*$"));
         }
         if (consumerMg.getQq()!=null){
-            query.addCriteria(Criteria.where("qq").regex("^.*"+consumerMg.getQq()+".*$"));
+            query.addCriteria(Criteria.where("qq").regex("^.*"+consumerMg.getQq().get(0)+".*$"));
         }
         if (consumerMg.getQqContent()!=null){
-            query.addCriteria(Criteria.where("qqContent").regex("^.*"+consumerMg.getQqContent()+".*$"));
+            query.addCriteria(Criteria.where("qqContent").regex("^.*"+consumerMg.getQqContent().get(0)+".*$"));
         }
         if (consumerMg.getTbww()!=null){
-            query.addCriteria(Criteria.where("tbww").regex("^.*"+consumerMg.getTbww()+".*$"));
+            query.addCriteria(Criteria.where("tbww").regex("^.*"+consumerMg.getTbww().get(0)+".*$"));
         }
         if (consumerMg.getTbwwContent()!=null){
-            query.addCriteria(Criteria.where("tbwwContent").regex("^.*"+consumerMg.getTbwwContent()+".*$"));
+            query.addCriteria(Criteria.where("tbwwContent").regex("^.*"+consumerMg.getTbwwContent().get(0)+".*$"));
         }
         if (consumerMg.getEmail()!=null){
-            query.addCriteria(Criteria.where("email").regex("^.*"+consumerMg.getEmail()+".*$"));
+            query.addCriteria(Criteria.where("email").regex("^.*"+consumerMg.getEmail().get(0)+".*$"));
         }
         if (consumerMg.getBaidu()!=null){
-            query.addCriteria(Criteria.where("baidu").regex("^.*"+consumerMg.getBaidu()+".*$"));
+            query.addCriteria(Criteria.where("baidu").regex("^.*"+consumerMg.getBaidu().get(0)+".*$"));
         }
         if (consumerMg.getBaiduContent()!=null){
-            query.addCriteria(Criteria.where("baiduContent").regex("^.*"+consumerMg.getBaiduContent()+".*$"));
+            query.addCriteria(Criteria.where("baiduContent").regex("^.*"+consumerMg.getBaiduContent().get(0)+".*$"));
         }
         if (consumerMg.getIndexPage()!=null){
-            query.addCriteria(Criteria.where("indexPage").regex("^.*"+consumerMg.getIndexPage()+".*$"));
+            query.addCriteria(Criteria.where("indexPage").regex("^.*"+consumerMg.getIndexPage().get(0)+".*$"));
         }
         if (consumerMg.getRemark()!=null){
-            query.addCriteria(Criteria.where("remark").regex("^.*"+consumerMg.getRemark()+".*$"));
+            query.addCriteria(Criteria.where("remark").regex("^.*"+consumerMg.getRemark().get(0)+".*$"));
         }
         if (consumerMg.getConnectList()!=null){
-            query.addCriteria(Criteria.where("connectList").regex("^.*"+consumerMg.getConnectList()+".*$"));
+            query.addCriteria(Criteria.where("connectList").regex("^.*"+consumerMg.getConnectList().get(0)+".*$"));
         }
         if (consumerMg.getAddress()!=null){
-            query.addCriteria(Criteria.where("address").regex("^.*"+consumerMg.getAddress()+".*$"));
+            query.addCriteria(Criteria.where("address").regex("^.*"+consumerMg.getAddress().get(0)+".*$"));
         }
         if (consumerMg.getLogistialAddress()!=null){
-            query.addCriteria(Criteria.where("logistialAddress").regex("^.*"+consumerMg.getLogistialAddress()+".*$"));
+            query.addCriteria(Criteria.where("logistialAddress").regex("^.*"+consumerMg.getLogistialAddress().get(0)+".*$"));
         }
         //查询角色是否有查询全部权限
         Collection<GrantedAuthority> collection = SecurityUtil.getLoginUser().getAuthorities();

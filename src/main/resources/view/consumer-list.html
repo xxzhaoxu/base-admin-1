@@ -405,6 +405,7 @@
                     :file-list="fileList"
                     :on-success="upssuccess"
                     :on-error="uperror"
+                    :on-progress="upFileProgress"
                     :auto-upload="false">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                 <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
@@ -1783,16 +1784,15 @@
                 }
 
             },upssuccess(response, file, fileList){
-                // console.log(response)
                 let  t = this;
                 t.$refs.upload.clearFiles();
                 if (response.data===400){
                     t.$message.error(response.msg);
                 }
                 if (response.data===200){
-                    t.$message({
-                        message: response.msg,
-                        type: 'success'
+                    this.$alert('上传成功', '提示', {
+                        confirmButtonText: '确定'
+
                     });
                 }
 
@@ -1800,6 +1800,8 @@
                 this.$refs.upload.clearFiles();
                 this.$message.error(err);
 
+            },upFileProgress(event, file, fileList){
+                console.log(event)
             },upFileMotail(){
                 this.$refs.upload.clearFiles();
             },exprotData(){
