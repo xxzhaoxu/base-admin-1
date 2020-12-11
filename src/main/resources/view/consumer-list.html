@@ -19,23 +19,23 @@
             <el-row :gutter="20">
                 <el-col :span="6">
                     <el-form-item label="级别">
-                        <el-input v-model="level"></el-input>
+                        <el-input size="mini" v-model="level"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="新旧">
-                        <el-input v-model="isNew"></el-input>
+                        <el-input size="mini" v-model="isNew"></el-input>
                     </el-form-item>
                 </el-col>
 
                 <el-col :span="6">
                     <el-form-item label="类别">
-                        <el-input v-model="cType"></el-input>
+                        <el-input size="mini" v-model="cType"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="目录">
-                        <el-input v-model="menu"></el-input>
+                        <el-input size="mini" v-model="menu"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -44,23 +44,23 @@
             <el-row :gutter="20">
                 <el-col :span="6">
                     <el-form-item label="公司">
-                        <el-input v-model="company"></el-input>
+                        <el-input size="mini" v-model="company"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="姓名">
-                        <el-input v-model="cName"></el-input>
+                        <el-input size="mini" v-model="cName"></el-input>
                     </el-form-item>
                 </el-col>
 
                 <el-col :span="6">
                     <el-form-item label="手机">
-                        <el-input v-model="phone"></el-input>
+                        <el-input size="mini" v-model="phone"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="产品">
-                        <el-input v-model="product"></el-input>
+                        <el-input size="mini" v-model="product"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -735,6 +735,9 @@
             :data="tableData"
             stripe
             border
+            size="mini"
+            :row-style="{height:'20px'}"
+            :cell-style="{padding:'0px'}"
             :max-height="h"
             style="width: 100%">
         <el-table-column

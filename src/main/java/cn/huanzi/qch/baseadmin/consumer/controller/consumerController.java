@@ -1237,7 +1237,12 @@ public class consumerController {
 
                 }
                 if (s){
-                    consumerMg.setGroup(valueOf(rowList.get(39)));
+                    try {
+                        consumerMg.setGroup(valueOf(rowList.get(39)));
+                    }catch (Exception e){
+                        consumerMg.setGroup("");
+                    }
+
                 }else {
                     consumerMg.setGroup("");
                 }
@@ -1672,7 +1677,12 @@ public class consumerController {
 
                     }
                     if (s){
-                        consumerMg.setGroup(valueOf(rowList.get(39)));
+                        if (null!=rowList.get(39)&&39<len){
+                            consumerMg.setGroup(valueOf(rowList.get(39)));
+                        }else {
+                            consumerMg.setGroup("");
+                        }
+
                     }else {
                         consumerMg.setGroup("");
                     }
@@ -2107,7 +2117,12 @@ public class consumerController {
 
                     }
                     if (s){
-                        consumerMg.setGroup(valueOf(rowList.get(39)));
+                        try {
+                            consumerMg.setGroup(valueOf(rowList.get(39)));
+                        }catch (Exception e){
+                            consumerMg.setGroup("");
+                        }
+
                     }else {
                         consumerMg.setGroup("");
                     }
